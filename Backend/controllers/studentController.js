@@ -1,16 +1,35 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
-// Get All Students
+// ======================================
+// Get All Students (With Pagination)
+// ======================================
 const getAllStudents = async (req, res) => {
   try {
-    const students = await User.find({ role: "student" }).select("-password");
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const totalStudents = await User.countDocuments({
+      role: "student",
+    });
+
+    const students = await User.find({
+      role: "student",
+    })
+      .select("-password")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
       success: true,
-      count: students.length,
+      currentPage: page,
+      totalPages: Math.ceil(totalStudents / limit),
+      totalStudents,
       students,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -19,10 +38,13 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+// ======================================
 // Get Student By ID
+// ======================================
 const getStudentById = async (req, res) => {
   try {
-    const student = await User.findById(req.params.id).select("-password");
+    const student = await User.findById(req.params.id)
+      .select("-password");
 
     if (!student || student.role !== "student") {
       return res.status(404).json({
@@ -35,6 +57,7 @@ const getStudentById = async (req, res) => {
       success: true,
       student,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -43,7 +66,9 @@ const getStudentById = async (req, res) => {
   }
 };
 
+// ======================================
 // Create Student
+// ======================================
 const createStudent = async (req, res) => {
   try {
     const {
@@ -57,7 +82,9 @@ const createStudent = async (req, res) => {
       address,
     } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({
+      email,
+    });
 
     if (existingUser) {
       return res.status(400).json({
@@ -85,6 +112,7 @@ const createStudent = async (req, res) => {
       message: "Student created successfully",
       student,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -93,7 +121,9 @@ const createStudent = async (req, res) => {
   }
 };
 
+// ======================================
 // Update Student
+// ======================================
 const updateStudent = async (req, res) => {
   try {
     const student = await User.findByIdAndUpdate(
@@ -117,6 +147,7 @@ const updateStudent = async (req, res) => {
       message: "Student updated successfully",
       student,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -125,10 +156,14 @@ const updateStudent = async (req, res) => {
   }
 };
 
+// ======================================
 // Delete Student
+// ======================================
 const deleteStudent = async (req, res) => {
   try {
-    const student = await User.findByIdAndDelete(req.params.id);
+    const student = await User.findByIdAndDelete(
+      req.params.id
+    );
 
     if (!student) {
       return res.status(404).json({
@@ -141,6 +176,7 @@ const deleteStudent = async (req, res) => {
       success: true,
       message: "Student deleted successfully",
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,

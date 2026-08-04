@@ -12,11 +12,14 @@ function Students() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
+    fetchStudents(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     const filtered = students.filter((student) =>
@@ -26,25 +29,33 @@ function Students() {
     );
 
     setFilteredStudents(filtered);
-  }, [search, students]);
+  }, [students, search]);
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (page = 1) => {
+    setLoading(true);
+
     try {
-      const response = await API.get("/admin/students", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await API.get(
+        `/admin/students?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setStudents(response.data.students);
       setFilteredStudents(response.data.students);
+
+      setCurrentPage(response.data.currentPage);
+      setTotalPages(response.data.totalPages);
 
     } catch (error) {
       console.log(error);
 
       toast.error(
         error.response?.data?.message ||
-        "Failed to load students"
+          "Failed to load students"
       );
 
     } finally {
@@ -68,14 +79,14 @@ function Students() {
 
       toast.success("Student Deleted Successfully");
 
-      fetchStudents();
+      fetchStudents(currentPage);
 
     } catch (error) {
       console.log(error);
 
       toast.error(
         error.response?.data?.message ||
-        "Delete Failed"
+          "Delete Failed"
       );
     }
   };
@@ -133,19 +144,12 @@ function Students() {
                 <thead className="table-dark">
 
                   <tr>
-
                     <th>Roll No</th>
-
                     <th>Name</th>
-
                     <th>Email</th>
-
                     <th>Department</th>
-
                     <th>Semester</th>
-
                     <th>Actions</th>
-
                   </tr>
 
                 </thead>
@@ -212,6 +216,36 @@ function Students() {
                 </tbody>
 
               </table>
+
+            </div>
+
+            {/* Pagination */}
+
+            <div className="d-flex justify-content-center align-items-center mt-4">
+
+              <button
+                className="btn btn-secondary me-2"
+                disabled={currentPage === 1}
+                onClick={() =>
+                  setCurrentPage(currentPage - 1)
+                }
+              >
+                ⬅ Previous
+              </button>
+
+              <span className="fw-bold">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                className="btn btn-secondary ms-2"
+                disabled={currentPage === totalPages}
+                onClick={() =>
+                  setCurrentPage(currentPage + 1)
+                }
+              >
+                Next ➡
+              </button>
 
             </div>
 
