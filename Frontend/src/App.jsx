@@ -8,18 +8,25 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
+
 import Students from "./pages/students";
 import AddStudent from "./pages/AddStudent";
 import EditStudent from "./pages/EditStudent";
+
 import EditProfile from "./pages/EditProfile";
 import StudentProfile from "./pages/StudentProfile";
+import ChangePassword from "./pages/ChangePassword";
+import About from "./pages/About";
+
 import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <BrowserRouter>
+
       <Navbar />
 
       <Routes>
@@ -105,6 +112,24 @@ function App() {
           }
         />
 
+        <Route
+          path="/student/change-password"
+          element={
+            <ProtectedRoute role="student">
+              <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/about"
+          element={
+            <ProtectedRoute role="student">
+              <About />
+            </ProtectedRoute>
+          }
+        />
+
         {/* ==========================
             404 Page
         ========================== */}
@@ -112,6 +137,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
       </Routes>
+
     </BrowserRouter>
   );
 }

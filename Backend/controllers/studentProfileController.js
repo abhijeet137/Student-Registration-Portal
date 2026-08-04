@@ -19,6 +19,7 @@ const getStudentProfile = async (req, res) => {
       success: true,
       student,
     });
+
   } catch (error) {
     console.error(error);
 
@@ -34,7 +35,7 @@ const getStudentProfile = async (req, res) => {
 // ===============================
 const updateStudentProfile = async (req, res) => {
   try {
-    const { phone, address, password } = req.body;
+    const { phone, address } = req.body;
 
     const student = await User.findById(req.user.id);
 
@@ -45,20 +46,12 @@ const updateStudentProfile = async (req, res) => {
       });
     }
 
-    // Update Phone
     if (phone !== undefined) {
       student.phone = phone;
     }
 
-    // Update Address
     if (address !== undefined) {
       student.address = address;
-    }
-
-    // Update Password (Optional)
-    if (password && password.trim() !== "") {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      student.password = hashedPassword;
     }
 
     await student.save();
@@ -77,6 +70,7 @@ const updateStudentProfile = async (req, res) => {
         address: student.address,
       },
     });
+
   } catch (error) {
     console.error(error);
 
@@ -87,7 +81,76 @@ const updateStudentProfile = async (req, res) => {
   }
 };
 
+// ===============================
+// Change Password
+// ===============================
+const changePassword = async (req, res) => {
+  try {
+
+    const {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match",
+      });
+    }
+
+    const student = await User.findById(req.user.id);
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(
+      currentPassword,
+      student.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Current password is incorrect",
+      });
+    }
+
+    student.password = await bcrypt.hash(newPassword, 10);
+
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+};
+
 module.exports = {
   getStudentProfile,
   updateStudentProfile,
+  changePassword,
 };

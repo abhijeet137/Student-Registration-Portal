@@ -2,17 +2,26 @@ import Sidebar from "./Sidebar";
 
 function Layout({ children }) {
   return (
-    <div className="d-flex">
+    <div className="container-fluid">
+      <div className="row">
 
-      <Sidebar />
+        {/* Sidebar */}
+        <div className="col-lg-3 col-xl-2 p-0">
+          <Sidebar />
+        </div>
 
-      <div
-        className="flex-grow-1 p-4"
-        style={{ backgroundColor: "#f8f9fa" }}
-      >
-        {children}
+        {/* Main Content */}
+        <div
+          className="col-lg-9 col-xl-10 p-4"
+          style={{
+            background: "#f8f9fa",
+            minHeight: "100vh",
+          }}
+        >
+          {children}
+        </div>
+
       </div>
-
     </div>
   );
 }

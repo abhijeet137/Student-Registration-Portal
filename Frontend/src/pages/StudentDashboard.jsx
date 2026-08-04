@@ -25,18 +25,11 @@ function StudentDashboard() {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await API.get("/student/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await API.get("/student/profile");
 
       if (response.data.success) {
         setStudent(response.data.student);
       }
-
     } catch (error) {
       console.log(error);
 
@@ -44,7 +37,6 @@ function StudentDashboard() {
         error.response?.data?.message ||
           "Failed to load profile"
       );
-
     } finally {
       setLoading(false);
     }
@@ -63,7 +55,7 @@ function StudentDashboard() {
   if (loading) {
     return (
       <Layout>
-        <div className="container mt-5 text-center">
+        <div className="container text-center mt-5">
           <h3>Loading Dashboard...</h3>
         </div>
       </Layout>
@@ -79,18 +71,25 @@ function StudentDashboard() {
           👨‍🎓 Student Dashboard
         </h2>
 
-        <div className="row">
+        <div className="row g-4">
 
-          <div className="col-lg-4">
+          {/* Profile Card */}
 
-            <div className="card shadow border-0">
+          <div className="col-12 col-lg-4">
+
+            <div className="card shadow border-0 h-100">
 
               <div className="card-body text-center">
 
                 <img
-                  src="https://ui-avatars.com/api/?name=Student&background=0D6EFD&color=fff"
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    student.name || "Student"
+                  )}&background=0D6EFD&color=fff&size=180`}
                   alt="Profile"
-                  className="rounded-circle mb-3"
+                  className="rounded-circle img-fluid mb-3"
+                  style={{
+                    maxWidth: "150px",
+                  }}
                 />
 
                 <h3>{student.name}</h3>
@@ -105,64 +104,90 @@ function StudentDashboard() {
 
           </div>
 
-          <div className="col-lg-8">
+          {/* Information */}
 
-            <div className="card shadow border-0">
+          <div className="col-12 col-lg-8">
+
+            <div className="card shadow border-0 h-100">
 
               <div className="card-header bg-primary text-white">
 
-                <h4>Student Information</h4>
+                <h4 className="mb-0">
+                  Student Information
+                </h4>
 
               </div>
 
               <div className="card-body">
 
-                <table className="table">
+                <div className="table-responsive">
 
-                  <tbody>
+                  <table className="table table-bordered align-middle">
 
-                    <tr>
-                      <th>Roll Number</th>
-                      <td>{student.rollNumber}</td>
-                    </tr>
+                    <tbody>
 
-                    <tr>
-                      <th>Department</th>
-                      <td>{student.department}</td>
-                    </tr>
+                      <tr>
+                        <th>Roll Number</th>
+                        <td>{student.rollNumber}</td>
+                      </tr>
 
-                    <tr>
-                      <th>Semester</th>
-                      <td>{student.semester}</td>
-                    </tr>
+                      <tr>
+                        <th>Department</th>
+                        <td>{student.department}</td>
+                      </tr>
 
-                    <tr>
-                      <th>Phone</th>
-                      <td>{student.phone || "Not Available"}</td>
-                    </tr>
+                      <tr>
+                        <th>Semester</th>
+                        <td>{student.semester}</td>
+                      </tr>
 
-                    <tr>
-                      <th>Address</th>
-                      <td>{student.address || "Not Available"}</td>
-                    </tr>
+                      <tr>
+                        <th>Phone</th>
+                        <td>
+                          {student.phone || "Not Available"}
+                        </td>
+                      </tr>
 
-                  </tbody>
+                      <tr>
+                        <th>Address</th>
+                        <td>
+                          {student.address || "Not Available"}
+                        </td>
+                      </tr>
 
-                </table>
+                    </tbody>
 
-                <button
-                  className="btn btn-warning me-2"
-                  onClick={() => navigate("/student/edit-profile")}
-                >
-                  ✏ Edit Profile
-                </button>
+                  </table>
 
-                <button
-                  className="btn btn-danger"
-                  onClick={logout}
-                >
-                  🚪 Logout
-                </button>
+                </div>
+
+                <div className="row g-2 mt-3">
+
+                  <div className="col-12 col-md-6">
+
+                    <button
+                      className="btn btn-warning w-100"
+                      onClick={() =>
+                        navigate("/student/edit-profile")
+                      }
+                    >
+                      ✏ Edit Profile
+                    </button>
+
+                  </div>
+
+                  <div className="col-12 col-md-6">
+
+                    <button
+                      className="btn btn-danger w-100"
+                      onClick={logout}
+                    >
+                      🚪 Logout
+                    </button>
+
+                  </div>
+
+                </div>
 
               </div>
 

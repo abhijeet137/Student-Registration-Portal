@@ -14,7 +14,6 @@ function Sidebar() {
     <div
       className="bg-dark text-white p-3"
       style={{
-        width: "250px",
         minHeight: "100vh",
       }}
     >
@@ -25,53 +24,48 @@ function Sidebar() {
       <div className="d-grid gap-2">
 
         {/* ================= ADMIN MENU ================= */}
+
         {user?.role === "admin" && (
           <>
-            <Link
-              className="btn btn-outline-light"
-              to="/admin/dashboard"
-            >
+            <Link className="btn btn-outline-light" to="/admin/dashboard">
               🏠 Dashboard
             </Link>
 
-            <Link
-              className="btn btn-outline-light"
-              to="/admin/students"
-            >
+            <Link className="btn btn-outline-light" to="/admin/students">
               👨‍🎓 Students
             </Link>
 
-            <Link
-              className="btn btn-outline-light"
-              to="/admin/add-student"
-            >
+            <Link className="btn btn-outline-light" to="/admin/add-student">
               ➕ Add Student
             </Link>
           </>
         )}
 
         {/* ================= STUDENT MENU ================= */}
+
         {user?.role === "student" && (
           <>
-            <Link
-              className="btn btn-outline-light"
-              to="/student/dashboard"
-            >
+            <Link className="btn btn-outline-light" to="/student/dashboard">
               🏠 Dashboard
             </Link>
 
-            <Link
-              className="btn btn-outline-light"
-              to="/student/profile"
-            >
+            <Link className="btn btn-outline-light" to="/student/profile">
               👤 My Profile
+            </Link>
+
+            <Link className="btn btn-outline-light" to="/student/edit-profile">
+              ✏ Edit Profile
             </Link>
 
             <Link
               className="btn btn-outline-light"
-              to="/student/edit-profile"
+              to="/student/change-password"
             >
-              ✏ Edit Profile
+              🔐 Change Password
+            </Link>
+
+            <Link className="btn btn-outline-light" to="/student/about">
+              ℹ About Portal
             </Link>
           </>
         )}
@@ -88,4 +82,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar; 
+export default Sidebar;

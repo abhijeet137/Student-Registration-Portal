@@ -8,8 +8,6 @@ function EditStudent() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
@@ -29,24 +27,18 @@ function EditStudent() {
 
   const fetchStudent = async () => {
     try {
-      const response = await API.get(`/admin/students/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await API.get(`/admin/students/${id}`);
 
       if (response.data.success) {
         setStudent(response.data.student);
       }
-
     } catch (error) {
       console.log(error);
 
       toast.error(
         error.response?.data?.message ||
-          "Failed to load student"
+        "Failed to load student"
       );
-
     } finally {
       setLoading(false);
     }
@@ -67,17 +59,12 @@ function EditStudent() {
 
       const response = await API.put(
         `/admin/students/${id}`,
-        student,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        student
       );
 
       toast.success(
         response.data.message ||
-          "Student Updated Successfully!"
+        "Student Updated Successfully!"
       );
 
       setTimeout(() => {
@@ -89,7 +76,7 @@ function EditStudent() {
 
       toast.error(
         error.response?.data?.message ||
-          "Failed to update student"
+        "Failed to update student"
       );
 
     } finally {
@@ -100,10 +87,8 @@ function EditStudent() {
   if (loading) {
     return (
       <Layout>
-        <div className="container mt-5">
-          <h3 className="text-center">
-            Loading Student...
-          </h3>
+        <div className="container mt-5 text-center">
+          <h3>Loading Student...</h3>
         </div>
       </Layout>
     );
@@ -112,175 +97,211 @@ function EditStudent() {
   return (
     <Layout>
 
-      <div className="container mt-4">
+      <div className="container-fluid py-3">
 
-        <div className="card shadow">
+        <div className="row justify-content-center">
 
-          <div className="card-header bg-warning">
+          <div className="col-12 col-lg-10 col-xl-8">
 
-            <h3>✏ Edit Student</h3>
+            <div className="card shadow">
 
-          </div>
+              <div className="card-header bg-warning">
+                <h3 className="mb-0">
+                  ✏ Edit Student
+                </h3>
+              </div>
 
-          <div className="card-body">
+              <div className="card-body">
 
-            <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
 
-              <div className="row">
+                  <div className="row">
 
-                <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
 
-                  <label>Name</label>
+                      <label className="form-label">
+                        Name
+                      </label>
 
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    value={student.name}
-                    onChange={handleChange}
-                    required
-                  />
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="name"
+                        value={student.name}
+                        onChange={handleChange}
+                        required
+                      />
 
-                </div>
+                    </div>
 
-                <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
 
-                  <label>Email</label>
+                      <label className="form-label">
+                        Email
+                      </label>
 
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    value={student.email}
-                    onChange={handleChange}
-                    required
-                  />
+                      <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        value={student.email}
+                        onChange={handleChange}
+                        required
+                      />
 
-                </div>
+                    </div>
 
-                <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
 
-                  <label>Roll Number</label>
+                      <label className="form-label">
+                        Roll Number
+                      </label>
 
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="rollNumber"
-                    value={student.rollNumber}
-                    onChange={handleChange}
-                    required
-                  />
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="rollNumber"
+                        value={student.rollNumber}
+                        onChange={handleChange}
+                        required
+                      />
 
-                </div>
+                    </div>
 
-                <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
 
-                  <label>Department</label>
+                      <label className="form-label">
+                        Department
+                      </label>
 
-                  <select
-                    className="form-select"
-                    name="department"
-                    value={student.department}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Department</option>
-
-                    <option value="Computer Science">
-                      Computer Science
-                    </option>
-
-                    <option value="Information Technology">
-                      Information Technology
-                    </option>
-
-                    <option value="Electronics">
-                      Electronics
-                    </option>
-
-                    <option value="Mechanical">
-                      Mechanical
-                    </option>
-
-                    <option value="Civil">
-                      Civil
-                    </option>
-
-                  </select>
-
-                </div>
-
-                <div className="col-md-6 mb-3">
-
-                  <label>Semester</label>
-
-                  <select
-                    className="form-select"
-                    name="semester"
-                    value={student.semester}
-                    onChange={handleChange}
-                    required
-                  >
-                    {[1,2,3,4,5,6,7,8].map((sem)=>(
-                      <option
-                        key={sem}
-                        value={sem}
+                      <select
+                        className="form-select"
+                        name="department"
+                        value={student.department}
+                        onChange={handleChange}
+                        required
                       >
-                        Semester {sem}
-                      </option>
-                    ))}
-                  </select>
+                        <option value="">Select Department</option>
 
-                </div>
+                        <option value="Computer Science">
+                          Computer Science
+                        </option>
 
-                <div className="col-md-6 mb-3">
+                        <option value="Information Technology">
+                          Information Technology
+                        </option>
 
-                  <label>Phone</label>
+                        <option value="Electronics">
+                          Electronics
+                        </option>
 
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="phone"
-                    value={student.phone}
-                    onChange={handleChange}
-                  />
+                        <option value="Mechanical">
+                          Mechanical
+                        </option>
 
-                </div>
+                        <option value="Civil">
+                          Civil
+                        </option>
 
-                <div className="col-12 mb-3">
+                      </select>
 
-                  <label>Address</label>
+                    </div>
 
-                  <textarea
-                    rows="3"
-                    className="form-control"
-                    name="address"
-                    value={student.address}
-                    onChange={handleChange}
-                  />
+                    <div className="col-12 col-md-6 mb-3">
 
-                </div>
+                      <label className="form-label">
+                        Semester
+                      </label>
+
+                      <select
+                        className="form-select"
+                        name="semester"
+                        value={student.semester}
+                        onChange={handleChange}
+                        required
+                      >
+                        {[1,2,3,4,5,6,7,8].map((sem) => (
+                          <option
+                            key={sem}
+                            value={sem}
+                          >
+                            Semester {sem}
+                          </option>
+                        ))}
+                      </select>
+
+                    </div>
+
+                    <div className="col-12 col-md-6 mb-3">
+
+                      <label className="form-label">
+                        Phone
+                      </label>
+
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="phone"
+                        value={student.phone}
+                        onChange={handleChange}
+                      />
+
+                    </div>
+
+                    <div className="col-12 mb-3">
+
+                      <label className="form-label">
+                        Address
+                      </label>
+
+                      <textarea
+                        rows="3"
+                        className="form-control"
+                        name="address"
+                        value={student.address}
+                        onChange={handleChange}
+                      />
+
+                    </div>
+
+                  </div>
+
+                  <div className="row mt-3">
+
+                    <div className="col-12 col-md-6 mb-2">
+
+                      <button
+                        className="btn btn-warning w-100"
+                        disabled={updating}
+                      >
+                        {updating
+                          ? "Updating..."
+                          : "Update Student"}
+                      </button>
+
+                    </div>
+
+                    <div className="col-12 col-md-6">
+
+                      <button
+                        type="button"
+                        className="btn btn-secondary w-100"
+                        onClick={() =>
+                          navigate("/admin/students")
+                        }
+                      >
+                        Cancel
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </form>
 
               </div>
 
-              <button
-                className="btn btn-warning me-2"
-                disabled={updating}
-              >
-                {updating
-                  ? "Updating..."
-                  : "Update Student"}
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => navigate("/admin/students")}
-              >
-                Cancel
-              </button>
-
-            </form>
+            </div>
 
           </div>
 

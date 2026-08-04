@@ -26,18 +26,11 @@ function AdminDashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await API.get("/admin/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await API.get("/admin/dashboard");
 
       setStats(response.data.stats);
       setDepartmentStats(response.data.departmentStats);
       setLatestStudents(response.data.latestStudents);
-
     } catch (error) {
       console.log(error);
 
@@ -45,7 +38,6 @@ function AdminDashboard() {
         error.response?.data?.message ||
           "Failed to load dashboard"
       );
-
     } finally {
       setLoading(false);
     }
@@ -82,17 +74,17 @@ function AdminDashboard() {
 
         {/* Statistics */}
 
-        <div className="row">
+        <div className="row g-3">
 
-          <div className="col-md-3 mb-4">
+          <div className="col-12 col-sm-6 col-lg-3">
 
-            <div className="card shadow bg-primary text-white">
+            <div className="card shadow bg-primary text-white h-100">
 
               <div className="card-body text-center">
 
-                <h5>Total Students</h5>
+                <h6>Total Students</h6>
 
-                <h1>{stats.totalStudents}</h1>
+                <h2>{stats.totalStudents}</h2>
 
               </div>
 
@@ -100,15 +92,15 @@ function AdminDashboard() {
 
           </div>
 
-          <div className="col-md-3 mb-4">
+          <div className="col-12 col-sm-6 col-lg-3">
 
-            <div className="card shadow bg-success text-white">
+            <div className="card shadow bg-success text-white h-100">
 
               <div className="card-body text-center">
 
-                <h5>Total Admins</h5>
+                <h6>Total Admins</h6>
 
-                <h1>{stats.totalAdmins}</h1>
+                <h2>{stats.totalAdmins}</h2>
 
               </div>
 
@@ -116,15 +108,15 @@ function AdminDashboard() {
 
           </div>
 
-          <div className="col-md-3 mb-4">
+          <div className="col-12 col-sm-6 col-lg-3">
 
-            <div className="card shadow bg-warning">
+            <div className="card shadow bg-warning h-100">
 
               <div className="card-body text-center">
 
-                <h5>Departments</h5>
+                <h6>Departments</h6>
 
-                <h1>{stats.departments}</h1>
+                <h2>{stats.departments}</h2>
 
               </div>
 
@@ -132,15 +124,15 @@ function AdminDashboard() {
 
           </div>
 
-          <div className="col-md-3 mb-4">
+          <div className="col-12 col-sm-6 col-lg-3">
 
-            <div className="card shadow bg-danger text-white">
+            <div className="card shadow bg-danger text-white h-100">
 
               <div className="card-body text-center">
 
-                <h5>Semesters</h5>
+                <h6>Semesters</h6>
 
-                <h1>{stats.semesters}</h1>
+                <h2>{stats.semesters}</h2>
 
               </div>
 
@@ -152,7 +144,13 @@ function AdminDashboard() {
 
         {/* Chart */}
 
-        <DashboardChart departmentStats={departmentStats} />
+        <div className="mt-4">
+
+          <DashboardChart
+            departmentStats={departmentStats}
+          />
+
+        </div>
 
         {/* Latest Students */}
 
@@ -160,68 +158,74 @@ function AdminDashboard() {
 
           <div className="card-header bg-dark text-white">
 
-            <h4>Latest Registered Students</h4>
+            <h5 className="mb-0">
+              Latest Registered Students
+            </h5>
 
           </div>
 
           <div className="card-body">
 
-            <table className="table table-hover table-bordered">
+            <div className="table-responsive">
 
-              <thead className="table-dark">
+              <table className="table table-hover table-bordered align-middle">
 
-                <tr>
-
-                  <th>Roll No</th>
-
-                  <th>Name</th>
-
-                  <th>Department</th>
-
-                  <th>Semester</th>
-
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                {latestStudents.length > 0 ? (
-
-                  latestStudents.map((student) => (
-
-                    <tr key={student._id}>
-
-                      <td>{student.rollNumber}</td>
-
-                      <td>{student.name}</td>
-
-                      <td>{student.department}</td>
-
-                      <td>{student.semester}</td>
-
-                    </tr>
-
-                  ))
-
-                ) : (
+                <thead className="table-dark">
 
                   <tr>
 
-                    <td
-                      colSpan="4"
-                      className="text-center"
-                    >
-                      No Students Found
-                    </td>
+                    <th>Roll No</th>
+
+                    <th>Name</th>
+
+                    <th>Department</th>
+
+                    <th>Semester</th>
 
                   </tr>
 
-                )}
+                </thead>
 
-              </tbody>
+                <tbody>
 
-            </table>
+                  {latestStudents.length > 0 ? (
+
+                    latestStudents.map((student) => (
+
+                      <tr key={student._id}>
+
+                        <td>{student.rollNumber}</td>
+
+                        <td>{student.name}</td>
+
+                        <td>{student.department}</td>
+
+                        <td>{student.semester}</td>
+
+                      </tr>
+
+                    ))
+
+                  ) : (
+
+                    <tr>
+
+                      <td
+                        colSpan="4"
+                        className="text-center"
+                      >
+                        No Students Found
+                      </td>
+
+                    </tr>
+
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
 
           </div>
 
@@ -233,32 +237,54 @@ function AdminDashboard() {
 
           <div className="card-header bg-secondary text-white">
 
-            <h4>Quick Actions</h4>
+            <h5 className="mb-0">
+              Quick Actions
+            </h5>
 
           </div>
 
           <div className="card-body">
 
-            <button
-              className="btn btn-success me-3"
-              onClick={() => navigate("/admin/add-student")}
-            >
-              ➕ Add Student
-            </button>
+            <div className="row g-2">
 
-            <button
-              className="btn btn-primary me-3"
-              onClick={() => navigate("/admin/students")}
-            >
-              👨‍🎓 View Students
-            </button>
+              <div className="col-12 col-md-4">
 
-            <button
-              className="btn btn-danger"
-              onClick={logout}
-            >
-              🚪 Logout
-            </button>
+                <button
+                  className="btn btn-success w-100"
+                  onClick={() =>
+                    navigate("/admin/add-student")
+                  }
+                >
+                  ➕ Add Student
+                </button>
+
+              </div>
+
+              <div className="col-12 col-md-4">
+
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={() =>
+                    navigate("/admin/students")
+                  }
+                >
+                  👨‍🎓 View Students
+                </button>
+
+              </div>
+
+              <div className="col-12 col-md-4">
+
+                <button
+                  className="btn btn-danger w-100"
+                  onClick={logout}
+                >
+                  🚪 Logout
+                </button>
+
+              </div>
+
+            </div>
 
           </div>
 
