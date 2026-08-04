@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 function Sidebar() {
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const logout = () => {
     localStorage.clear();
     navigate("/login");
@@ -22,26 +24,57 @@ function Sidebar() {
 
       <div className="d-grid gap-2">
 
-        <Link
-          className="btn btn-outline-light"
-          to="/admin/dashboard"
-        >
-          🏠 Dashboard
-        </Link>
+        {/* ================= ADMIN MENU ================= */}
+        {user?.role === "admin" && (
+          <>
+            <Link
+              className="btn btn-outline-light"
+              to="/admin/dashboard"
+            >
+              🏠 Dashboard
+            </Link>
 
-        <Link
-          className="btn btn-outline-light"
-          to="/admin/students"
-        >
-          👨‍🎓 Students
-        </Link>
+            <Link
+              className="btn btn-outline-light"
+              to="/admin/students"
+            >
+              👨‍🎓 Students
+            </Link>
 
-        <Link
-          className="btn btn-outline-light"
-          to="/admin/add-student"
-        >
-          ➕ Add Student
-        </Link>
+            <Link
+              className="btn btn-outline-light"
+              to="/admin/add-student"
+            >
+              ➕ Add Student
+            </Link>
+          </>
+        )}
+
+        {/* ================= STUDENT MENU ================= */}
+        {user?.role === "student" && (
+          <>
+            <Link
+              className="btn btn-outline-light"
+              to="/student/dashboard"
+            >
+              🏠 Dashboard
+            </Link>
+
+            <Link
+              className="btn btn-outline-light"
+              to="/student/profile"
+            >
+              👤 My Profile
+            </Link>
+
+            <Link
+              className="btn btn-outline-light"
+              to="/student/edit-profile"
+            >
+              ✏ Edit Profile
+            </Link>
+          </>
+        )}
 
         <button
           className="btn btn-danger mt-3"
@@ -55,4 +88,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default Sidebar; 

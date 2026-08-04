@@ -14,12 +14,12 @@ import Students from "./pages/students";
 import AddStudent from "./pages/AddStudent";
 import EditStudent from "./pages/EditStudent";
 import EditProfile from "./pages/EditProfile";
+import StudentProfile from "./pages/StudentProfile";
 import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <BrowserRouter>
-
       <Navbar />
 
       <Routes>
@@ -88,6 +88,15 @@ function App() {
         />
 
         <Route
+          path="/student/profile"
+          element={
+            <ProtectedRoute role="student">
+              <StudentProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/student/edit-profile"
           element={
             <ProtectedRoute role="student">
@@ -103,7 +112,6 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
       </Routes>
-
     </BrowserRouter>
   );
 }
