@@ -3,23 +3,16 @@ const User = require("../models/User");
 
 const protect = async (req, res, next) => {
   try {
- 
-    // Get Token From Cookie
     const token = req.cookies.token;
 
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: "Access Denied. Please login first.",
+        message: "Access denied. Please login first.",
       });
     }
 
-
-    // Verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  
-    // Find User
 
     const user = await User.findById(decoded.id).select("-password");
 
@@ -30,15 +23,7 @@ const protect = async (req, res, next) => {
       });
     }
 
-
-    // Attach User to Request
-   
-    req.user = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
+    req.user = user;
 
     next();
   } catch (error) {
@@ -46,7 +31,7 @@ const protect = async (req, res, next) => {
 
     return res.status(401).json({
       success: false,
-      message: "Invalid or Expired Token.",
+      message: "Invalid or expired token.",
     });
   }
 };
