@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../services/api";
 
@@ -5,7 +6,20 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
+  const getCurrentUser = async () => {
+    try {
+      const res = await API.get("/auth/me");
+      setUser(res.data.user);
+    } catch (err) {
+      setUser(null);
+    }
+  };
 
   const getHomeLink = () => {
     if (user?.role === "admin") return "/admin/dashboard";
@@ -16,43 +30,35 @@ function Navbar() {
   const handleLogout = async () => {
     try {
       await API.post("/auth/logout");
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
 
-    localStorage.removeItem("user");
-
+    setUser(null);
     navigate("/login");
-    window.location.reload();
   };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow">
       <div className="container">
 
-        {/* Logo */}
         <Link className="navbar-brand fw-bold" to={getHomeLink()}>
           🎓 Student Portal
         </Link>
 
-        {/* Mobile Toggle */}
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navbar Items */}
         <div className="collapse navbar-collapse" id="navbarNav">
+
           <ul className="navbar-nav ms-auto">
 
-            {/* Home */}
             <li className="nav-item">
               <Link
                 className={`nav-link ${
@@ -61,8 +67,6 @@ function Navbar() {
                     : ""
                 }`}
                 to={getHomeLink()}
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
               >
                 🏠 Home
               </Link>
@@ -71,31 +75,21 @@ function Navbar() {
             {!user ? (
               <>
                 <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/login"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                  >
-                    🔑 Login
+                  <Link className="nav-link" to="/login">
+                    Login
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/register"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                  >
-                    📝 Register
+                  <Link className="nav-link" to="/register">
+                    Register
                   </Link>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <span className="nav-link text-white">
+                  <span className="nav-link">
                     👋 {user.name}
                   </span>
                 </li>
@@ -112,6 +106,7 @@ function Navbar() {
             )}
 
           </ul>
+
         </div>
 
       </div>
