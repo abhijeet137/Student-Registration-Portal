@@ -10,51 +10,68 @@ function Navbar() {
 
   useEffect(() => {
     getCurrentUser();
-  }, []);
+  }, [location.pathname]);
 
   const getCurrentUser = async () => {
     try {
       const res = await API.get("/auth/me");
       setUser(res.data.user);
-    } catch (err) {
+    } catch (error) {
       setUser(null);
     }
   };
 
   const getHomeLink = () => {
-    if (user?.role === "admin") return "/admin/dashboard";
-    if (user?.role === "student") return "/student/dashboard";
+    if (!user) return "/";
+
+    if (user.role === "admin") {
+      return "/admin/dashboard";
+    }
+
+    if (user.role === "student") {
+      return "/student/dashboard";
+    }
+
     return "/";
   };
 
   const handleLogout = async () => {
     try {
       await API.post("/auth/logout");
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
 
     setUser(null);
-    navigate("/login");
+
+    navigate("/", { replace: true });
+
+    window.location.reload();
   };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow">
       <div className="container">
 
+        {/* Logo */}
         <Link className="navbar-brand fw-bold" to={getHomeLink()}>
           🎓 Student Portal
         </Link>
 
+        {/* Mobile Toggle */}
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
+        {/* Navbar */}
         <div className="collapse navbar-collapse" id="navbarNav">
 
           <ul className="navbar-nav ms-auto">
@@ -67,6 +84,8 @@ function Navbar() {
                     : ""
                 }`}
                 to={getHomeLink()}
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
               >
                 🏠 Home
               </Link>
@@ -75,28 +94,38 @@ function Navbar() {
             {!user ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    Login
+                  <Link
+                    className="nav-link"
+                    to="/login"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                  >
+                    🔑 Login
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    Register
+                  <Link
+                    className="nav-link"
+                    to="/register"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                  >
+                    📝 Register
                   </Link>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <span className="nav-link">
+                  <span className="nav-link text-white">
                     👋 {user.name}
                   </span>
                 </li>
 
                 <li className="nav-item">
                   <button
-                    className="btn btn-outline-light ms-2"
+                    className="btn btn-outline-light ms-lg-2 mt-2 mt-lg-0"
                     onClick={handleLogout}
                   >
                     Logout
