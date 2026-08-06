@@ -58,7 +58,6 @@ const registerUser = async (req, res) => {
         role: user.role,
       },
     });
-
   } catch (error) {
     console.error(error);
 
@@ -110,8 +109,8 @@ const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -125,7 +124,6 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
     });
-
   } catch (error) {
     console.error(error);
 
@@ -137,7 +135,7 @@ const loginUser = async (req, res) => {
 };
 
 // ======================================
-// Current Logged In User
+// Current User
 // ======================================
 const getCurrentUser = async (req, res) => {
   try {
@@ -154,10 +152,7 @@ const getCurrentUser = async (req, res) => {
       success: true,
       user,
     });
-
   } catch (error) {
-    console.error(error);
-
     res.status(500).json({
       success: false,
       message: error.message,
@@ -169,7 +164,11 @@ const getCurrentUser = async (req, res) => {
 // Logout
 // ======================================
 const logoutUser = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   res.status(200).json({
     success: true,

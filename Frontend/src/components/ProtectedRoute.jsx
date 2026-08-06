@@ -16,7 +16,7 @@ function ProtectedRoute({ children, role }) {
 
       const user = response.data.user;
 
-      // Save latest user info
+      // Save latest user
       localStorage.setItem("user", JSON.stringify(user));
 
       if (role && user.role !== role) {
@@ -25,7 +25,7 @@ function ProtectedRoute({ children, role }) {
         setAuthorized(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       localStorage.removeItem("user");
       setAuthorized(false);
     } finally {
