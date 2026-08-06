@@ -18,9 +18,9 @@ const {
   getDashboardStats,
 } = require("../controllers/adminController");
 
-// ===============================
+
 // Admin Dashboard
-// ===============================
+
 router.get(
   "/dashboard",
   protect,
@@ -28,9 +28,8 @@ router.get(
   getDashboardStats
 );
 
-// ===============================
+
 // Student CRUD Routes
-// ===============================
 
 // Get All Students
 router.get(

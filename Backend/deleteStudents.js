@@ -4,9 +4,7 @@ const mongoose = require("mongoose");
 
 const User = require("./models/User");
 
-// ==============================
 // Connect Database
-// ==============================
 
 const connectDB = async () => {
   try {
@@ -23,9 +21,8 @@ const connectDB = async () => {
   }
 };
 
-// ==============================
 // Delete Only Students
-// ==============================
+
 
 const deleteStudents = async () => {
   try {

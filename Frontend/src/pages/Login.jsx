@@ -28,7 +28,7 @@ function Login() {
 
       const response = await API.post("/auth/login", formData);
 
-      localStorage.setItem("token", response.data.token);
+      // Save only user information
       localStorage.setItem(
         "user",
         JSON.stringify(response.data.user)
@@ -43,7 +43,7 @@ function Login() {
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       toast.error(
         error.response?.data?.message || "Login Failed"
@@ -60,11 +60,7 @@ function Login() {
       <div className="card shadow">
 
         <div className="card-header bg-primary text-white">
-
-          <h2 className="text-center">
-            Login
-          </h2>
-
+          <h2 className="text-center">Login</h2>
         </div>
 
         <div className="card-body">
@@ -72,7 +68,6 @@ function Login() {
           <form onSubmit={handleSubmit}>
 
             <div className="mb-3">
-
               <label>Email</label>
 
               <input
@@ -84,11 +79,9 @@ function Login() {
                 onChange={handleChange}
                 required
               />
-
             </div>
 
             <div className="mb-3">
-
               <label>Password</label>
 
               <input
@@ -100,7 +93,6 @@ function Login() {
                 onChange={handleChange}
                 required
               />
-
             </div>
 
             <button

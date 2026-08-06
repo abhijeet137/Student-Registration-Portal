@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
 
     password: {
@@ -28,12 +29,14 @@ const userSchema = new mongoose.Schema(
 
     rollNumber: {
       type: String,
-      default: "",
+      required: true,
+      trim: true,
     },
 
     department: {
       type: String,
-      default: "",
+      required: true,
+      trim: true,
     },
 
     semester: {
@@ -43,7 +46,9 @@ const userSchema = new mongoose.Schema(
 
     phone: {
       type: String,
-      default: "",
+      unique: true,
+      sparse: true,
+      trim: true,
     },
 
     address: {
@@ -53,6 +58,29 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+  }
+);
+
+// Email Unique
+userSchema.index({ email: 1 }, { unique: true });
+
+// Phone Unique
+userSchema.index(
+  { phone: 1 },
+  {
+    unique: true,
+    sparse: true,
+  }
+);
+
+// Roll Number + Department Unique
+userSchema.index(
+  {
+    department: 1,
+    rollNumber: 1,
+  },
+  {
+    unique: true,
   }
 );
 

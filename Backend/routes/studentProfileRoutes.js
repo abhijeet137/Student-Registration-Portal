@@ -9,9 +9,8 @@ const {
   changePassword,
 } = require("../controllers/studentProfileController");
 
-// =====================================
+
 // Student Profile Routes
-// =====================================
 
 // Get Logged-in Student Profile
 router.get(

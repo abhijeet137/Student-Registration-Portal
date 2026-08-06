@@ -1,9 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
-// ======================================
+
 // Get All Students (With Pagination)
-// ======================================
+
 const getAllStudents = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -14,9 +14,7 @@ const getAllStudents = async (req, res) => {
       role: "student",
     });
 
-    const students = await User.find({
-      role: "student",
-    })
+    const students = await User.find({ role: "student" })
       .select("-password")
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -29,7 +27,6 @@ const getAllStudents = async (req, res) => {
       totalStudents,
       students,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -38,13 +35,12 @@ const getAllStudents = async (req, res) => {
   }
 };
 
-// ======================================
+
 // Get Student By ID
-// ======================================
+
 const getStudentById = async (req, res) => {
   try {
-    const student = await User.findById(req.params.id)
-      .select("-password");
+    const student = await User.findById(req.params.id).select("-password");
 
     if (!student || student.role !== "student") {
       return res.status(404).json({
@@ -57,7 +53,6 @@ const getStudentById = async (req, res) => {
       success: true,
       student,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -66,12 +61,12 @@ const getStudentById = async (req, res) => {
   }
 };
 
-// ======================================
+
 // Create Student
-// ======================================
+
 const createStudent = async (req, res) => {
   try {
-    const {
+    let {
       name,
       email,
       password,
@@ -82,14 +77,45 @@ const createStudent = async (req, res) => {
       address,
     } = req.body;
 
-    const existingUser = await User.findOne({
-      email,
-    });
+    name = name.trim();
+    email = email.trim().toLowerCase();
+    rollNumber = rollNumber.trim();
+    department = department.trim();
+    phone = phone ? phone.trim() : "";
 
-    if (existingUser) {
+    // Email Check
+    const existingEmail = await User.findOne({ email });
+
+    if (existingEmail) {
       return res.status(400).json({
         success: false,
         message: "Email already exists",
+      });
+    }
+
+    // Phone Check
+    if (phone) {
+      const existingPhone = await User.findOne({ phone });
+
+      if (existingPhone) {
+        return res.status(400).json({
+          success: false,
+          message: "Phone number already exists",
+        });
+      }
+    }
+
+    // Roll Number Check
+    const existingRoll = await User.findOne({
+      role: "student",
+      rollNumber,
+      department,
+    });
+
+    if (existingRoll) {
+      return res.status(400).json({
+        success: false,
+        message: "Roll Number already exists in this department",
       });
     }
 
@@ -104,7 +130,7 @@ const createStudent = async (req, res) => {
       department,
       semester,
       phone,
-      address,
+      address: address ? address.trim() : "",
     });
 
     res.status(201).json({
@@ -112,8 +138,9 @@ const createStudent = async (req, res) => {
       message: "Student created successfully",
       student,
     });
-
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -121,14 +148,80 @@ const createStudent = async (req, res) => {
   }
 };
 
-// ======================================
+
 // Update Student
-// ======================================
 const updateStudent = async (req, res) => {
   try {
+    let {
+      name,
+      email,
+      rollNumber,
+      department,
+      semester,
+      phone,
+      address,
+    } = req.body;
+
+    name = name.trim();
+    email = email.trim().toLowerCase();
+    rollNumber = rollNumber.trim();
+    department = department.trim();
+    phone = phone ? phone.trim() : "";
+
+    // Email Check
+    const existingEmail = await User.findOne({
+      email,
+      _id: { $ne: req.params.id },
+    });
+
+    if (existingEmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
+
+    // Phone Check
+    if (phone) {
+      const existingPhone = await User.findOne({
+        phone,
+        _id: { $ne: req.params.id },
+      });
+
+      if (existingPhone) {
+        return res.status(400).json({
+          success: false,
+          message: "Phone number already exists",
+        });
+      }
+    }
+
+    // Roll Number Check
+    const existingRoll = await User.findOne({
+      role: "student",
+      rollNumber,
+      department,
+      _id: { $ne: req.params.id },
+    });
+
+    if (existingRoll) {
+      return res.status(400).json({
+        success: false,
+        message: "Roll Number already exists in this department",
+      });
+    }
+
     const student = await User.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      {
+        name,
+        email,
+        rollNumber,
+        department,
+        semester,
+        phone,
+        address: address ? address.trim() : "",
+      },
       {
         new: true,
         runValidators: true,
@@ -147,8 +240,9 @@ const updateStudent = async (req, res) => {
       message: "Student updated successfully",
       student,
     });
-
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -156,14 +250,12 @@ const updateStudent = async (req, res) => {
   }
 };
 
-// ======================================
+
 // Delete Student
-// ======================================
+
 const deleteStudent = async (req, res) => {
   try {
-    const student = await User.findByIdAndDelete(
-      req.params.id
-    );
+    const student = await User.findByIdAndDelete(req.params.id);
 
     if (!student) {
       return res.status(404).json({
@@ -176,7 +268,6 @@ const deleteStudent = async (req, res) => {
       success: true,
       message: "Student deleted successfully",
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,

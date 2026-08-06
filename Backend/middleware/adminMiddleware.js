@@ -1,17 +1,32 @@
-const adminOnly = (req, res, next) => {
+const User = require("../models/User");
 
-    if (req.user.role !== "admin") {
+const adminOnly = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
 
-        return res.status(403).json({
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-            message: "Access Denied. Admin Only."
-
-        });
-
+    if (user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access Denied. Admin Only.",
+      });
     }
 
     next();
+  } catch (error) {
+    console.error(error);
 
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
 };
 
 module.exports = adminOnly;

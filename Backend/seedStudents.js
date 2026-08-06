@@ -6,9 +6,7 @@ const { faker } = require("@faker-js/faker");
 
 const User = require("./models/User");
 
-// ==============================
 // Connect MongoDB
-// ==============================
 
 const connectDB = async () => {
   try {
@@ -21,9 +19,9 @@ const connectDB = async () => {
   }
 };
 
-// ==============================
+
 // Departments
-// ==============================
+
 
 const departments = [
   "Computer Science",
@@ -34,9 +32,9 @@ const departments = [
   "Electrical",
 ];
 
-// ==============================
+
 // Generate Students
-// ==============================
+
 
 const generateStudents = async () => {
   try {

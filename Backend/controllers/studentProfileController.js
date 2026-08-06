@@ -1,9 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
-// ===============================
+
 // Get Logged-in Student Profile
-// ===============================
+
 const getStudentProfile = async (req, res) => {
   try {
     const student = await User.findById(req.user.id).select("-password");
@@ -30,9 +30,9 @@ const getStudentProfile = async (req, res) => {
   }
 };
 
-// ===============================
+
 // Update Logged-in Student Profile
-// ===============================
+
 const updateStudentProfile = async (req, res) => {
   try {
     const { phone, address } = req.body;
@@ -81,9 +81,9 @@ const updateStudentProfile = async (req, res) => {
   }
 };
 
-// ===============================
+
 // Change Password
-// ===============================
+
 const changePassword = async (req, res) => {
   try {
 

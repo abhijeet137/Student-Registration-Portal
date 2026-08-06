@@ -1,12 +1,25 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({ closeSidebar }) {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const goTo = (path) => {
+    navigate(path);
+
+    if (closeSidebar) {
+      closeSidebar();
+    }
+  };
+
   const logout = () => {
     localStorage.clear();
+
+    if (closeSidebar) {
+      closeSidebar();
+    }
+
     navigate("/login");
   };
 
@@ -14,59 +27,72 @@ function Sidebar() {
     <div
       className="bg-dark text-white p-3"
       style={{
-        minHeight: "100vh",
+        minHeight: "100%",
       }}
     >
-      <h3 className="text-center mb-4">
-        🎓 Student Portal
-      </h3>
-
       <div className="d-grid gap-2">
-
-        {/* ================= ADMIN MENU ================= */}
 
         {user?.role === "admin" && (
           <>
-            <Link className="btn btn-outline-light" to="/admin/dashboard">
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/admin/dashboard")}
+            >
               🏠 Dashboard
-            </Link>
+            </button>
 
-            <Link className="btn btn-outline-light" to="/admin/students">
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/admin/students")}
+            >
               👨‍🎓 Students
-            </Link>
+            </button>
 
-            <Link className="btn btn-outline-light" to="/admin/add-student">
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/admin/add-student")}
+            >
               ➕ Add Student
-            </Link>
+            </button>
           </>
         )}
 
-        {/* ================= STUDENT MENU ================= */}
-
         {user?.role === "student" && (
           <>
-            <Link className="btn btn-outline-light" to="/student/dashboard">
-              🏠 Dashboard
-            </Link>
-
-            <Link className="btn btn-outline-light" to="/student/profile">
-              👤 My Profile
-            </Link>
-
-            <Link className="btn btn-outline-light" to="/student/edit-profile">
-              ✏ Edit Profile
-            </Link>
-
-            <Link
+            <button
               className="btn btn-outline-light"
-              to="/student/change-password"
+              onClick={() => goTo("/student/dashboard")}
+            >
+              🏠 Dashboard
+            </button>
+
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/student/profile")}
+            >
+              👤 My Profile
+            </button>
+
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/student/edit-profile")}
+            >
+              ✏ Edit Profile
+            </button>
+
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/student/change-password")}
             >
               🔐 Change Password
-            </Link>
+            </button>
 
-            <Link className="btn btn-outline-light" to="/student/about">
+            <button
+              className="btn btn-outline-light"
+              onClick={() => goTo("/student/about")}
+            >
               ℹ About Portal
-            </Link>
+            </button>
           </>
         )}
 

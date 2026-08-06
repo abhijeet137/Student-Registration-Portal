@@ -1,32 +1,52 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   try {
-    // Get Authorization Header
-    const authHeader = req.headers.authorization;
+ 
+    // Get Token From Cookie
+    const token = req.cookies.token;
 
-    // Check if token exists
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return res.status(401).json({
-        message: "Access Denied. No Token Provided.",
+        success: false,
+        message: "Access Denied. Please login first.",
       });
     }
 
-    // Extract Token
-    const token = authHeader.split(" ")[1];
 
-    // Verify Token
+    // Verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Save User Info
-    req.user = decoded;
+  
+    // Find User
 
-    // Continue
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+
+    // Attach User to Request
+   
+    req.user = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
     next();
-
   } catch (error) {
+    console.error(error);
+
     return res.status(401).json({
-      message: "Invalid Token",
+      success: false,
+      message: "Invalid or Expired Token.",
     });
   }
 };
