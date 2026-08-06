@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+
     <App />
 
     <ToastContainer
@@ -20,5 +21,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       theme="colored"
       newestOnTop
     />
+
   </React.StrictMode>
 );
