@@ -26,25 +26,15 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <BrowserRouter>
-
       <Navbar />
 
       <Routes>
-
-        {/* ==========================
-            Public Routes
-        ========================== */}
-
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
-
         <Route path="/login" element={<Login />} />
-
         <Route path="/register" element={<Register />} />
 
-        {/* ==========================
-            Admin Routes
-        ========================== */}
-
+        {/* Admin Routes */}
         <Route
           path="/admin/dashboard"
           element={
@@ -81,10 +71,7 @@ function App() {
           }
         />
 
-        {/* ==========================
-            Student Routes
-        ========================== */}
-
+        {/* Student Routes */}
         <Route
           path="/student/dashboard"
           element={
@@ -130,14 +117,9 @@ function App() {
           }
         />
 
-        {/* ==========================
-            404 Page
-        ========================== */}
-
+        {/* 404 */}
         <Route path="*" element={<NotFound />} />
-
       </Routes>
-
     </BrowserRouter>
   );
 }

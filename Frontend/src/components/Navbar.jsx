@@ -1,51 +1,33 @@
-import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import API from "../services/api";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(() => {
-    getCurrentUser();
-  }, [location.pathname]);
-
-  const getCurrentUser = async () => {
-    try {
-      const res = await API.get("/auth/me");
-      setUser(res.data.user);
-    } catch (error) {
-      setUser(null);
+  const handleHome = () => {
+    if (!user) {
+      navigate("/");
+      return;
     }
-  };
-
-  const getHomeLink = () => {
-    if (!user) return "/";
 
     if (user.role === "admin") {
-      return "/admin/dashboard";
+      navigate("/admin/dashboard");
+      return;
     }
 
     if (user.role === "student") {
-      return "/student/dashboard";
+      navigate("/student/dashboard");
+      return;
     }
 
-    return "/";
+    navigate("/");
   };
 
-  const handleLogout = async () => {
-    try {
-      await API.post("/auth/logout");
-    } catch (error) {
-      console.log(error);
-    }
-
-    setUser(null);
-
-    navigate("/", { replace: true });
-
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
     window.location.reload();
   };
 
@@ -54,9 +36,12 @@ function Navbar() {
       <div className="container">
 
         {/* Logo */}
-        <Link className="navbar-brand fw-bold" to={getHomeLink()}>
+        <button
+          className="navbar-brand btn btn-link text-white text-decoration-none fw-bold"
+          onClick={handleHome}
+        >
           🎓 Student Portal
-        </Link>
+        </button>
 
         {/* Mobile Toggle */}
         <button
@@ -73,32 +58,27 @@ function Navbar() {
 
         {/* Navbar */}
         <div className="collapse navbar-collapse" id="navbarNav">
-
           <ul className="navbar-nav ms-auto">
 
             <li className="nav-item">
-              <Link
-                className={`nav-link ${
-                  location.pathname === getHomeLink()
-                    ? "active fw-bold"
-                    : ""
-                }`}
-                to={getHomeLink()}
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
+              <button
+                className="nav-link btn btn-link text-white text-decoration-none"
+                onClick={handleHome}
               >
                 🏠 Home
-              </Link>
+              </button>
             </li>
 
             {!user ? (
               <>
                 <li className="nav-item">
                   <Link
-                    className="nav-link"
+                    className={`nav-link ${
+                      location.pathname === "/login"
+                        ? "active fw-bold"
+                        : ""
+                    }`}
                     to="/login"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
                   >
                     🔑 Login
                   </Link>
@@ -106,10 +86,12 @@ function Navbar() {
 
                 <li className="nav-item">
                   <Link
-                    className="nav-link"
+                    className={`nav-link ${
+                      location.pathname === "/register"
+                        ? "active fw-bold"
+                        : ""
+                    }`}
                     to="/register"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
                   >
                     📝 Register
                   </Link>
@@ -135,7 +117,6 @@ function Navbar() {
             )}
 
           </ul>
-
         </div>
 
       </div>

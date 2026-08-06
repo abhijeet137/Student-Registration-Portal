@@ -26,6 +26,7 @@ function ProtectedRoute({ children, role }) {
       }
     } catch (error) {
       console.error(error);
+
       localStorage.removeItem("user");
       setAuthorized(false);
     } finally {
