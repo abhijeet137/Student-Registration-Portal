@@ -2,9 +2,9 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
+// ======================================
 // Register User
-
+// ======================================
 const registerUser = async (req, res) => {
   try {
     let {
@@ -25,7 +25,6 @@ const registerUser = async (req, res) => {
     phone = phone ? phone.trim() : "";
     address = address ? address.trim() : "";
 
-    // Check Existing Email
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -35,10 +34,8 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Encrypt Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Always Register as Student
     const user = await User.create({
       name,
       email,
@@ -72,9 +69,9 @@ const registerUser = async (req, res) => {
   }
 };
 
-
+// ======================================
 // Login User
-
+// ======================================
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -99,7 +96,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Generate JWT
     const token = jwt.sign(
       {
         id: user._id,
@@ -112,11 +108,10 @@ const loginUser = async (req, res) => {
       }
     );
 
-    // Store JWT in HTTP-Only Cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -141,9 +136,38 @@ const loginUser = async (req, res) => {
   }
 };
 
+// ======================================
+// Current Logged In User
+// ======================================
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
 
-// Logout User
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
+    res.status(200).json({
+      success: true,
+      user,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ======================================
+// Logout
+// ======================================
 const logoutUser = (req, res) => {
   res.clearCookie("token");
 
@@ -157,4 +181,5 @@ module.exports = {
   registerUser,
   loginUser,
   logoutUser,
+  getCurrentUser,
 };

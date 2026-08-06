@@ -1,16 +1,50 @@
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import API from "../services/api";
 
 function ProtectedRoute({ children, role }) {
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [loading, setLoading] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
 
-  // Not logged in
-  if (!token || !user) {
-    return <Navigate to="/login" replace />;
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    try {
+      const response = await API.get("/auth/me");
+
+      const user = response.data.user;
+
+      // Save latest user info
+      localStorage.setItem("user", JSON.stringify(user));
+
+      if (role && user.role !== role) {
+        setAuthorized(false);
+      } else {
+        setAuthorized(true);
+      }
+    } catch (error) {
+      console.log(error);
+      localStorage.removeItem("user");
+      setAuthorized(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <h3>Loading...</h3>
+      </div>
+    );
   }
 
-  // Wrong role
-  if (role && user.role !== role) {
+  if (!authorized) {
     return <Navigate to="/login" replace />;
   }
 
