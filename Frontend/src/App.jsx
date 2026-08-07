@@ -17,7 +17,7 @@ import Register from "./pages/Register";
 
 // Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
-import Students from "./pages/Students";
+import Students from "./pages/students";   // FIXED HERE
 import AddStudent from "./pages/AddStudent";
 import EditStudent from "./pages/EditStudent";
 
@@ -47,9 +47,7 @@ function App() {
 
 
 
-        {/* =====================
-            PUBLIC ROUTES
-        ====================== */}
+        {/* PUBLIC ROUTES */}
 
 
         <Route
@@ -73,16 +71,11 @@ function App() {
 
 
 
-        {/* =====================
-            ADMIN ROUTES
-        ====================== */}
-
+        {/* ADMIN ROUTES */}
 
 
         <Route
-
           path="/admin/dashboard"
-
           element={
 
             <ProtectedRoute role="admin">
@@ -92,15 +85,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/admin/students"
-
           element={
 
             <ProtectedRoute role="admin">
@@ -110,15 +100,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/admin/add-student"
-
           element={
 
             <ProtectedRoute role="admin">
@@ -128,15 +115,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/admin/edit-student/:id"
-
           element={
 
             <ProtectedRoute role="admin">
@@ -146,7 +130,6 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
@@ -154,16 +137,12 @@ function App() {
 
 
 
-        {/* =====================
-            STUDENT ROUTES
-        ====================== */}
+        {/* STUDENT ROUTES */}
 
 
 
         <Route
-
           path="/student/dashboard"
-
           element={
 
             <ProtectedRoute role="student">
@@ -173,15 +152,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/student/profile"
-
           element={
 
             <ProtectedRoute role="student">
@@ -191,15 +167,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/student/edit-profile"
-
           element={
 
             <ProtectedRoute role="student">
@@ -209,15 +182,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/student/change-password"
-
           element={
 
             <ProtectedRoute role="student">
@@ -227,15 +197,12 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
         <Route
-
           path="/student/about"
-
           element={
 
             <ProtectedRoute role="student">
@@ -245,24 +212,18 @@ function App() {
             </ProtectedRoute>
 
           }
-
         />
 
 
 
 
 
-        {/* =====================
-            404 PAGE
-        ====================== */}
+        {/* 404 */}
 
 
         <Route
-
           path="*"
-
           element={<NotFound />}
-
         />
 
 
