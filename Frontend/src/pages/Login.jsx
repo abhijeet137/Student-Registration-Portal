@@ -22,17 +22,17 @@ function Login() {
   const navigate = useNavigate();
 
 
-  const [loading, setLoading] =
+  const [loading,setLoading] =
     useState(false);
 
 
 
-  const [formData, setFormData] =
+  const [formData,setFormData] =
     useState({
 
-      email: "",
+      email:"",
 
-      password: "",
+      password:"",
 
     });
 
@@ -40,7 +40,7 @@ function Login() {
 
 
 
-  const handleChange = (e) => {
+  const handleChange = (e)=>{
 
 
     setFormData({
@@ -48,7 +48,7 @@ function Login() {
       ...formData,
 
       [e.target.name]:
-        e.target.value,
+      e.target.value,
 
     });
 
@@ -61,17 +61,18 @@ function Login() {
 
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e)=>{
 
 
     e.preventDefault();
 
 
 
-    try {
+    try{
 
 
       setLoading(true);
+
 
 
 
@@ -88,7 +89,12 @@ function Login() {
 
 
 
-      // Save JWT Token
+
+
+      // ==========================
+      // Save Token
+      // ==========================
+
 
       localStorage.setItem(
 
@@ -102,19 +108,24 @@ function Login() {
 
 
 
-      // Save User Data
+
+
+      // ==========================
+      // Save User
+      // ==========================
+
 
       localStorage.setItem(
 
         "user",
 
         JSON.stringify(
-
           response.data.user
-
         )
 
       );
+
+
 
 
 
@@ -130,13 +141,21 @@ function Login() {
 
 
 
+
+
+      // ==========================
       // Role Based Navigation
+      // ==========================
 
-      if(
 
-        response.data.user.role === "admin"
+      const role =
+        response.data.user.role;
 
-      ){
+
+
+
+
+      if(role === "superadmin"){
 
 
         navigate(
@@ -148,11 +167,23 @@ function Login() {
 
       }
 
-      else if(
 
-        response.data.user.role === "student"
 
-      ){
+      else if(role === "admin"){
+
+
+        navigate(
+
+          "/admin/dashboard"
+
+        );
+
+
+      }
+
+
+
+      else if(role === "student"){
 
 
         navigate(
@@ -164,7 +195,9 @@ function Login() {
 
       }
 
-      else {
+
+
+      else{
 
 
         toast.error(
@@ -183,17 +216,14 @@ function Login() {
 
 
 
+
+
     }
 
     catch(error){
 
 
-
-      console.log(
-
-        error
-
-      );
+      console.log(error);
 
 
 
@@ -204,7 +234,6 @@ function Login() {
         "Login Failed"
 
       );
-
 
 
     }
@@ -220,7 +249,11 @@ function Login() {
     }
 
 
+
   };
+
+
+
 
 
 
@@ -229,10 +262,12 @@ function Login() {
 
   return (
 
+
     <div className="auth-page">
 
 
       <div className="auth-card">
+
 
 
 
@@ -251,11 +286,13 @@ function Login() {
 
 
 
+
           <h1>
 
             Student Portal
 
           </h1>
+
 
 
 
@@ -276,7 +313,10 @@ function Login() {
 
 
 
+
         <form onSubmit={handleSubmit}>
+
+
 
 
 
@@ -293,6 +333,7 @@ function Login() {
 
 
 
+
             <div className="auth-input">
 
 
@@ -302,25 +343,42 @@ function Login() {
 
               <input
 
+
                 type="email"
+
 
                 name="email"
 
+
                 placeholder="Enter email"
 
-                value={formData.email}
 
-                onChange={handleChange}
+
+                value={
+                  formData.email
+                }
+
+
+
+                onChange={
+                  handleChange
+                }
+
+
 
                 required
 
+
               />
+
 
 
             </div>
 
 
+
           </div>
+
 
 
 
@@ -340,7 +398,10 @@ function Login() {
 
 
 
+
+
             <div className="auth-input">
+
 
 
               <FaLock />
@@ -349,22 +410,39 @@ function Login() {
 
               <input
 
+
                 type="password"
+
 
                 name="password"
 
+
+
                 placeholder="Enter password"
 
-                value={formData.password}
 
-                onChange={handleChange}
+
+                value={
+                  formData.password
+                }
+
+
+
+                onChange={
+                  handleChange
+                }
+
+
 
                 required
+
 
               />
 
 
+
             </div>
+
 
 
           </div>
@@ -376,13 +454,20 @@ function Login() {
 
 
 
+
           <button
+
 
             type="submit"
 
+
             className="auth-btn"
 
+
+
             disabled={loading}
+
+
 
           >
 
@@ -414,7 +499,10 @@ function Login() {
 
 
 
+
         </form>
+
+
 
 
 
@@ -424,10 +512,14 @@ function Login() {
 
 
 
+
+
+
     </div>
 
 
   );
+
 
 
 }
