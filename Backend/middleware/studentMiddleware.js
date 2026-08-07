@@ -1,10 +1,9 @@
 // ======================================
-// Admin Authorization Middleware
+// Student Authorization Middleware
 // ======================================
 
-const adminOnly = (req, res, next) => {
+const studentOnly = (req, res, next) => {
   try {
-    // Check Login
     if (!req.user) {
       return res.status(401).json({
         success: false,
@@ -12,16 +11,14 @@ const adminOnly = (req, res, next) => {
       });
     }
 
-    // Check Admin Role
-    if (req.user.role !== "admin") {
+    if (req.user.role !== "student") {
       return res.status(403).json({
         success: false,
-        message: "Access Denied. Admin Only.",
+        message: "Access Denied. Students Only.",
       });
     }
 
     next();
-
   } catch (error) {
     console.error(error);
 
@@ -32,4 +29,4 @@ const adminOnly = (req, res, next) => {
   }
 };
 
-module.exports = adminOnly;
+module.exports = studentOnly;

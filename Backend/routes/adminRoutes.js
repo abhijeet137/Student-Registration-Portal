@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
+// Middleware
 const protect = require("../middleware/authMiddleware");
 const adminOnly = require("../middleware/adminMiddleware");
 
-// Student CRUD Controller
+// Controllers
+const {
+  getDashboardStats,
+} = require("../controllers/adminController");
+
 const {
   getAllStudents,
   getStudentById,
@@ -13,13 +18,9 @@ const {
   deleteStudent,
 } = require("../controllers/studentController");
 
-// Dashboard Controller
-const {
-  getDashboardStats,
-} = require("../controllers/adminController");
-
-
+// ======================================
 // Admin Dashboard
+// ======================================
 
 router.get(
   "/dashboard",
@@ -28,8 +29,9 @@ router.get(
   getDashboardStats
 );
 
-
-// Student CRUD Routes
+// ======================================
+// Student Management
+// ======================================
 
 // Get All Students
 router.get(
@@ -47,7 +49,7 @@ router.get(
   getStudentById
 );
 
-// Add Student
+// Create Student
 router.post(
   "/students",
   protect,
