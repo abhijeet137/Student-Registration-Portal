@@ -17,7 +17,7 @@ import Register from "./pages/Register";
 
 // Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
-import Students from "./pages/Students";   // FIXED HERE
+import Students from "./pages/students";   // FIXED HERE
 import AddStudent from "./pages/AddStudent";
 import EditStudent from "./pages/EditStudent";
 
