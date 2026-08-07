@@ -1,126 +1,75 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaBars, FaBell, FaMoon, FaUserCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
+import "../styles/navbar.css";
 
-function Navbar() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
+function Navbar({ openSidebar }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleHome = () => {
-    if (!user) {
-      navigate("/");
-      return;
-    }
-
-    if (user.role === "admin") {
-      navigate("/admin/dashboard");
-      return;
-    }
-
-    if (user.role === "student") {
-      navigate("/student/dashboard");
-      return;
-    }
-
-    navigate("/");
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/");
-    window.location.reload();
-  };
-
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-      <div className="container">
+    <motion.header
+      className="navbar-custom"
+      initial={{ y: -60 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      {/* Left */}
 
-        {/* Logo */}
+      <div className="navbar-left">
+
         <button
-          className="navbar-brand btn btn-link text-white text-decoration-none fw-bold"
-          onClick={handleHome}
+          className="menu-btn"
+          onClick={openSidebar}
         >
-          🎓 Student Portal
+          <FaBars />
         </button>
 
-        {/* Mobile Toggle */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        <div>
 
-        {/* Navbar */}
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
+          <h2 className="navbar-title">
+            Dashboard
+          </h2>
 
-            <li className="nav-item">
-              <button
-                className="nav-link btn btn-link text-white text-decoration-none"
-                onClick={handleHome}
-              >
-                🏠 Home
-              </button>
-            </li>
+          <p className="navbar-subtitle">
+            Welcome back 👋
+          </p>
 
-            {!user ? (
-              <>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${
-                      location.pathname === "/login"
-                        ? "active fw-bold"
-                        : ""
-                    }`}
-                    to="/login"
-                  >
-                    🔑 Login
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${
-                      location.pathname === "/register"
-                        ? "active fw-bold"
-                        : ""
-                    }`}
-                    to="/register"
-                  >
-                    📝 Register
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <span className="nav-link text-white">
-                    👋 {user.name}
-                  </span>
-                </li>
-
-                <li className="nav-item">
-                  <button
-                    className="btn btn-outline-light ms-lg-2 mt-2 mt-lg-0"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            )}
-
-          </ul>
         </div>
 
       </div>
-    </nav>
+
+      {/* Right */}
+
+      <div className="navbar-right">
+
+        <button className="icon-btn">
+          <FaBell />
+        </button>
+
+        <button className="icon-btn">
+          <FaMoon />
+        </button>
+
+        <div className="profile-box">
+
+          <FaUserCircle className="profile-icon" />
+
+          <div>
+
+            <div className="profile-name">
+              {user?.name || "Administrator"}
+            </div>
+
+            <div className="profile-role">
+              {user?.role || "Admin"}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </motion.header>
   );
 }
 

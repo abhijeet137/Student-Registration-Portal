@@ -1,300 +1,600 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  FaSearch,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaUserGraduate,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
+
 import { toast } from "react-toastify";
+
 import Layout from "../components/Layout";
 import API from "../services/api";
 
+import "../styles/students.css";
+
 function Students() {
+
   const navigate = useNavigate();
 
   const [students, setStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [filteredStudents, setFilteredStudents] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [search, setSearch] =
+    useState("");
+
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
+  const [totalPages, setTotalPages] =
+    useState(1);
 
   useEffect(() => {
+
     fetchStudents(currentPage);
+
   }, [currentPage]);
 
   useEffect(() => {
-    const filtered = students.filter((student) =>
-      student.name.toLowerCase().includes(search.toLowerCase()) ||
-      student.email.toLowerCase().includes(search.toLowerCase()) ||
-      student.rollNumber.toLowerCase().includes(search.toLowerCase())
-    );
 
-    setFilteredStudents(filtered);
-  }, [students, search]);
+    const filtered =
+      students.filter((student) =>
 
-  const fetchStudents = async (page = 1) => {
-    setLoading(true);
+        student.name
+          .toLowerCase()
+          .includes(search.toLowerCase())
 
-    try {
-      const response = await API.get(
-        `/admin/students?page=${page}`
+        ||
+
+        student.email
+          .toLowerCase()
+          .includes(search.toLowerCase())
+
+        ||
+
+        student.rollNumber
+          .toLowerCase()
+          .includes(search.toLowerCase())
+
       );
 
-      setStudents(response.data.students);
-      setFilteredStudents(response.data.students);
+    setFilteredStudents(filtered);
 
-      setCurrentPage(response.data.currentPage);
-      setTotalPages(response.data.totalPages);
+  }, [students, search]);
 
-    } catch (error) {
+  const fetchStudents = async (
+    page = 1
+  ) => {
+
+    try {
+
+      setLoading(true);
+
+      const response =
+        await API.get(
+          `/admin/students?page=${page}`
+        );
+
+      setStudents(
+        response.data.students
+      );
+
+      setFilteredStudents(
+        response.data.students
+      );
+
+      setCurrentPage(
+        response.data.currentPage
+      );
+
+      setTotalPages(
+        response.data.totalPages
+      );
+
+    }
+
+    catch (error) {
 
       console.log(error);
 
       toast.error(
+
         error.response?.data?.message ||
+
         "Failed to load students"
+
       );
 
-    } finally {
+    }
+
+    finally {
 
       setLoading(false);
 
     }
+
   };
 
   const deleteStudent = async (id) => {
 
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this student?"
-    );
+    const confirmDelete =
+      window.confirm(
+        "Delete this student?"
+      );
 
     if (!confirmDelete) return;
 
     try {
 
-      await API.delete(`/admin/students/${id}`);
+      await API.delete(
+        `/admin/students/${id}`
+      );
 
-      toast.success("Student Deleted Successfully");
+      toast.success(
+        "Student Deleted"
+      );
 
       fetchStudents(currentPage);
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.log(error);
 
       toast.error(
         error.response?.data?.message ||
+
         "Delete Failed"
       );
 
     }
+
   };
 
   if (loading) {
+
     return (
+
       <Layout>
-        <div className="container mt-5 text-center">
-          <h3>Loading Students...</h3>
+
+        <div className="dashboard-loading">
+
+          <div className="loader"></div>
+
+          <h3>
+            Loading Students...
+          </h3>
+
         </div>
+
       </Layout>
+
     );
+
   }
 
   return (
+
     <Layout>
 
-      <div className="container-fluid">
+      <motion.div
+
+        initial={{
+          opacity:0,
+          y:20,
+        }}
+
+        animate={{
+          opacity:1,
+          y:0,
+        }}
+
+      >
 
         {/* Header */}
 
-        <div className="row align-items-center mb-4">
+        <div className="students-header">
 
-          <div className="col-12 col-md-6 mb-3 mb-md-0">
+          <div>
 
-            <h2 className="mb-0">
-              👨‍🎓 Students List
-            </h2>
+            <h1>
 
-          </div>
+              Students
 
-          <div className="col-12 col-md-6 text-md-end">
+            </h1>
 
-            <button
-              className="btn btn-success w-100 w-md-auto"
-              onClick={() =>
-                navigate("/admin/add-student")
-              }
-            >
-              ➕ Add Student
-            </button>
+            <p>
+
+              Manage all registered students.
+
+            </p>
 
           </div>
+
+          <button
+
+            className="primary-btn"
+
+            onClick={()=>
+
+              navigate("/admin/add-student")
+
+            }
+
+          >
+
+            <FaPlus />
+
+            Add Student
+
+          </button>
 
         </div>
 
         {/* Search */}
 
-        <div className="card shadow">
+        <div className="search-card">
 
-          <div className="card-body">
+          <div className="search-box">
 
-            <div className="mb-3">
+            <FaSearch />
 
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by Name, Email or Roll Number..."
-                value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
-              />
+            <input
 
-            </div>
+              type="text"
 
-            {/* Table */}
+              placeholder="Search student..."
 
-            <div className="table-responsive">
+              value={search}
 
-              <table className="table table-hover table-bordered align-middle">
+              onChange={(e)=>
 
-                <thead className="table-dark">
+                setSearch(
+                  e.target.value
+                )
 
-                  <tr>
+              }
 
-                    <th>Roll No</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                    <th>Semester</th>
-                    <th style={{ minWidth: "170px" }}>
-                      Actions
-                    </th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {filteredStudents.length > 0 ? (
-
-                    filteredStudents.map((student) => (
-
-                      <tr key={student._id}>
-
-                        <td>{student.rollNumber}</td>
-
-                        <td>{student.name}</td>
-
-                        <td>{student.email}</td>
-
-                        <td>{student.department}</td>
-
-                        <td>{student.semester}</td>
-
-                        <td>
-
-                          <div className="d-flex flex-column flex-md-row gap-2">
-
-                            <button
-                              className="btn btn-warning btn-sm w-100"
-                              onClick={() =>
-                                navigate(
-                                  `/admin/edit-student/${student._id}`
-                                )
-                              }
-                            >
-                              ✏ Edit
-                            </button>
-
-                            <button
-                              className="btn btn-danger btn-sm w-100"
-                              onClick={() =>
-                                deleteStudent(student._id)
-                              }
-                            >
-                              🗑 Delete
-                            </button>
-
-                          </div>
-
-                        </td>
-
-                      </tr>
-
-                    ))
-
-                  ) : (
-
-                    <tr>
-
-                      <td
-                        colSpan="6"
-                        className="text-center"
-                      >
-                        No Students Found
-                      </td>
-
-                    </tr>
-
-                  )}
-
-                </tbody>
-
-              </table>
-
-            </div>
-
-            {/* Pagination */}
-
-            <div className="row mt-4 align-items-center">
-
-              <div className="col-12 col-md-4 mb-2">
-
-                <button
-                  className="btn btn-secondary w-100"
-                  disabled={currentPage === 1}
-                  onClick={() =>
-                    setCurrentPage(currentPage - 1)
-                  }
-                >
-                  ⬅ Previous
-                </button>
-
-              </div>
-
-              <div className="col-12 col-md-4 text-center mb-2">
-
-                <strong>
-                  Page {currentPage} of {totalPages}
-                </strong>
-
-              </div>
-
-              <div className="col-12 col-md-4">
-
-                <button
-                  className="btn btn-secondary w-100"
-                  disabled={
-                    currentPage === totalPages
-                  }
-                  onClick={() =>
-                    setCurrentPage(currentPage + 1)
-                  }
-                >
-                  Next ➡
-                </button>
-
-              </div>
-
-            </div>
+            />
 
           </div>
 
         </div>
+                {/* Students Table */}
 
-      </div>
+        <motion.div
+
+          className="students-card"
+
+          initial={{
+            opacity:0,
+          }}
+
+          animate={{
+            opacity:1,
+          }}
+
+        >
+
+          <div className="table-wrapper">
+
+            <table className="modern-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Student
+                  </th>
+
+                  <th>
+                    Roll Number
+                  </th>
+
+                  <th>
+                    Department
+                  </th>
+
+                  <th>
+                    Semester
+                  </th>
+
+                  <th>
+                    Email
+                  </th>
+
+                  <th>
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+              {filteredStudents.length > 0 ? (
+
+                filteredStudents.map(
+                  (student)=>(
+
+                    <tr
+                      key={
+                        student._id
+                      }
+                    >
+
+                      {/* Student */}
+
+                      <td>
+
+                        <div
+                          className="student-profile"
+                        >
+
+                          <div
+                            className="student-avatar"
+                          >
+
+                            {
+                              student.name
+                              ?.charAt(0)
+                              .toUpperCase()
+                            }
+
+                          </div>
+
+
+                          <div>
+
+                            <h4>
+                              {
+                                student.name
+                              }
+                            </h4>
+
+                            <span>
+                              Student
+                            </span>
+
+                          </div>
+
+
+                        </div>
+
+                      </td>
+
+
+                      {/* Roll Number */}
+
+                      <td>
+
+                        <span
+                          className="roll-badge"
+                        >
+
+                          {
+                            student.rollNumber
+                          }
+
+                        </span>
+
+                      </td>
+
+
+                      {/* Department */}
+
+                      <td>
+
+                        {
+                          student.department
+                        }
+
+                      </td>
+
+
+                      {/* Semester */}
+
+                      <td>
+
+                        <span
+                          className="semester-badge"
+                        >
+
+                          Semester {
+                            student.semester
+                          }
+
+                        </span>
+
+                      </td>
+
+
+                      {/* Email */}
+
+                      <td>
+
+                        {
+                          student.email
+                        }
+
+                      </td>
+
+
+                      {/* Actions */}
+
+                      <td>
+
+                        <div
+                          className="action-buttons"
+                        >
+
+                          <button
+
+                            className="edit-btn"
+
+                            onClick={()=>
+
+                              navigate(
+                                `/admin/edit-student/${student._id}`
+                              )
+
+                            }
+
+                          >
+
+                            <FaEdit />
+
+                          </button>
+
+
+                          <button
+
+                            className="delete-btn"
+
+                            onClick={()=>
+
+                              deleteStudent(
+                                student._id
+                              )
+
+                            }
+
+                          >
+
+                            <FaTrash />
+
+                          </button>
+
+
+                        </div>
+
+
+                      </td>
+
+
+                    </tr>
+
+
+                  )
+
+                )
+
+              ) : (
+
+                <tr>
+
+                  <td
+                    colSpan="6"
+                    className="empty-table"
+                  >
+
+                    <FaUserGraduate />
+
+                    <p>
+                      No Students Found
+                    </p>
+
+                  </td>
+
+                </tr>
+
+              )}
+
+              </tbody>
+
+
+            </table>
+
+
+          </div>
+
+
+        </motion.div>
+                {/* Pagination */}
+
+        <div className="pagination-container">
+
+
+          <button
+
+            className="pagination-btn"
+
+            disabled={
+              currentPage === 1
+            }
+
+            onClick={() =>
+              setCurrentPage(
+                currentPage - 1
+              )
+            }
+
+          >
+
+            <FaChevronLeft />
+
+            Previous
+
+          </button>
+
+
+
+          <div className="page-number">
+
+            Page {currentPage} of {totalPages}
+
+          </div>
+
+
+
+          <button
+
+            className="pagination-btn"
+
+            disabled={
+              currentPage === totalPages
+            }
+
+            onClick={() =>
+              setCurrentPage(
+                currentPage + 1
+              )
+            }
+
+          >
+
+            Next
+
+            <FaChevronRight />
+
+          </button>
+
+
+        </div>
+
+
+      </motion.div>
+
 
     </Layout>
+
   );
+
 }
+
 
 export default Students;

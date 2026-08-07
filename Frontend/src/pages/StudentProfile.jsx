@@ -1,108 +1,354 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import {
+  FaUser,
+  FaEnvelope,
+  FaIdCard,
+  FaBuilding,
+  FaGraduationCap,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaEdit,
+} from "react-icons/fa";
+
 import Layout from "../components/Layout";
 import API from "../services/api";
 
-function StudentProfile() {
-  const [student, setStudent] = useState({});
-  const [loading, setLoading] = useState(true);
+import "../styles/studentProfile.css";
 
-  useEffect(() => {
+
+function StudentProfile(){
+
+  const [student,setStudent] =
+    useState({});
+
+
+  const [loading,setLoading] =
+    useState(true);
+
+
+
+  useEffect(()=>{
+
     fetchProfile();
-  }, []);
 
-  const fetchProfile = async () => {
-    try {
-      const response = await API.get("/student/profile");
+  },[]);
 
-      setStudent(response.data.student);
-    } catch (error) {
-      console.log(error);
-      alert("Failed to load profile");
-    } finally {
-      setLoading(false);
+
+
+  const fetchProfile=async()=>{
+
+    try{
+
+
+      const response =
+        await API.get(
+          "/student/profile"
+        );
+
+
+      setStudent(
+        response.data.student
+      );
+
+
     }
+
+    catch(error){
+
+      console.log(error);
+
+      alert(
+        "Failed to load profile"
+      );
+
+
+    }
+
+    finally{
+
+      setLoading(false);
+
+    }
+
+
   };
 
-  if (loading) {
-    return (
+
+
+  if(loading){
+
+    return(
+
       <Layout>
-        <div className="container mt-5">
-          <h3>Loading Profile...</h3>
+
+        <div className="dashboard-loading">
+
+          <div className="loader"></div>
+
+          <h3>
+            Loading Profile...
+          </h3>
+
         </div>
+
       </Layout>
+
     );
+
   }
 
-  return (
+
+
+  return(
+
     <Layout>
-      <div className="container mt-4">
 
-        <div className="card shadow">
 
-          <div className="card-header bg-primary text-white">
-            <h3>👤 My Profile</h3>
-          </div>
+      <div className="profile-page">
 
-          <div className="card-body">
 
-            <table className="table table-bordered">
+        <div className="profile-header">
 
-              <tbody>
 
-                <tr>
-                  <th width="30%">Name</th>
-                  <td>{student.name}</td>
-                </tr>
+          <h1>
+            My Profile
+          </h1>
 
-                <tr>
-                  <th>Email</th>
-                  <td>{student.email}</td>
-                </tr>
 
-                <tr>
-                  <th>Roll Number</th>
-                  <td>{student.rollNumber}</td>
-                </tr>
+          <p>
+            View your personal student information.
+          </p>
 
-                <tr>
-                  <th>Department</th>
-                  <td>{student.department}</td>
-                </tr>
 
-                <tr>
-                  <th>Semester</th>
-                  <td>{student.semester}</td>
-                </tr>
+        </div>
+                {/* Profile Content */}
 
-                <tr>
-                  <th>Phone</th>
-                  <td>{student.phone}</td>
-                </tr>
 
-                <tr>
-                  <th>Address</th>
-                  <td>{student.address}</td>
-                </tr>
+        <div className="profile-card">
 
-              </tbody>
 
-            </table>
 
-            <Link
-              to="/student/edit-profile"
-              className="btn btn-warning"
-            >
-              ✏ Edit Profile
-            </Link>
+          {/* Avatar */}
+
+
+          <div className="profile-avatar">
+
+
+            <img
+
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                student.name || "Student"
+              )}&background=2563EB&color=fff&size=200`}
+
+              alt="Profile"
+
+            />
+
 
           </div>
+
+
+
+
+
+          <h2>
+
+            {student.name}
+
+          </h2>
+
+
+          <p className="profile-email">
+
+            <FaEnvelope />
+
+            {student.email}
+
+          </p>
+
+
+
+
+
+          {/* Information */}
+
+
+          <div className="profile-info-grid">
+
+
+            <div className="profile-info-box">
+
+              <FaUser />
+
+              <div>
+
+                <span>
+                  Name
+                </span>
+
+                <h4>
+                  {student.name}
+                </h4>
+
+              </div>
+
+            </div>
+
+
+
+
+            <div className="profile-info-box">
+
+              <FaIdCard />
+
+              <div>
+
+                <span>
+                  Roll Number
+                </span>
+
+                <h4>
+                  {student.rollNumber}
+                </h4>
+
+              </div>
+
+            </div>
+
+
+
+
+            <div className="profile-info-box">
+
+              <FaBuilding />
+
+              <div>
+
+                <span>
+                  Department
+                </span>
+
+                <h4>
+                  {student.department}
+                </h4>
+
+              </div>
+
+            </div>
+
+
+
+
+            <div className="profile-info-box">
+
+              <FaGraduationCap />
+
+              <div>
+
+                <span>
+                  Semester
+                </span>
+
+                <h4>
+                  Semester {student.semester}
+                </h4>
+
+              </div>
+
+            </div>
+
+
+
+
+            <div className="profile-info-box">
+
+              <FaPhone />
+
+              <div>
+
+                <span>
+                  Phone
+                </span>
+
+                <h4>
+
+                  {
+                    student.phone ||
+                    "Not Available"
+                  }
+
+                </h4>
+
+              </div>
+
+            </div>
+
+
+
+
+            <div className="profile-info-box full-profile-box">
+
+              <FaMapMarkerAlt />
+
+              <div>
+
+                <span>
+                  Address
+                </span>
+
+                <h4>
+
+                  {
+                    student.address ||
+                    "Not Available"
+                  }
+
+                </h4>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+
+
+
+          {/* Edit Button */}
+
+
+          <Link
+
+            to="/student/edit-profile"
+
+            className="profile-edit-btn"
+
+          >
+
+            <FaEdit />
+
+            Edit Profile
+
+          </Link>
+
+
+
 
         </div>
 
+
       </div>
+
+
     </Layout>
+
   );
+
 }
+
 
 export default StudentProfile;

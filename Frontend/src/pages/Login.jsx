@@ -1,116 +1,437 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import {
+  FaEnvelope,
+  FaLock,
+  FaGraduationCap,
+  FaSignInAlt,
+} from "react-icons/fa";
+
 import { toast } from "react-toastify";
+
 import API from "../services/api";
 
+import "../styles/auth.css";
+
+
+
 function Login() {
+
+
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [loading, setLoading] =
+    useState(false);
+
+
+
+  const [formData, setFormData] =
+    useState({
+
+      email: "",
+
+      password: "",
+
+    });
+
+
+
+
 
   const handleChange = (e) => {
+
+
     setFormData({
+
       ...formData,
-      [e.target.name]: e.target.value,
+
+      [e.target.name]:
+        e.target.value,
+
     });
+
+
   };
+
+
+
+
+
+
 
   const handleSubmit = async (e) => {
+
+
     e.preventDefault();
 
+
+
     try {
+
+
       setLoading(true);
 
-      const response = await API.post("/auth/login", formData);
 
-      // Save only user information
+
+      const response =
+        await API.post(
+
+          "/auth/login",
+
+          formData
+
+        );
+
+
+
+
+
+      // Save JWT Token
+
       localStorage.setItem(
-        "user",
-        JSON.stringify(response.data.user)
+
+        "token",
+
+        response.data.token
+
       );
 
-      toast.success("Login Successful!");
 
-      if (response.data.user.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/student/dashboard");
+
+
+
+      // Save User Data
+
+      localStorage.setItem(
+
+        "user",
+
+        JSON.stringify(
+
+          response.data.user
+
+        )
+
+      );
+
+
+
+
+
+      toast.success(
+
+        "Login Successful!"
+
+      );
+
+
+
+
+
+      // Role Based Navigation
+
+      if(
+
+        response.data.user.role === "admin"
+
+      ){
+
+
+        navigate(
+
+          "/admin/dashboard"
+
+        );
+
+
       }
 
-    } catch (error) {
-      console.error(error);
+      else if(
 
-      toast.error(
-        error.response?.data?.message || "Login Failed"
+        response.data.user.role === "student"
+
+      ){
+
+
+        navigate(
+
+          "/student/dashboard"
+
+        );
+
+
+      }
+
+      else {
+
+
+        toast.error(
+
+          "Invalid User Role"
+
+        );
+
+
+        navigate("/login");
+
+
+      }
+
+
+
+
+
+    }
+
+    catch(error){
+
+
+
+      console.log(
+
+        error
+
       );
 
-    } finally {
-      setLoading(false);
+
+
+      toast.error(
+
+        error.response?.data?.message ||
+
+        "Login Failed"
+
+      );
+
+
+
     }
+
+
+
+    finally{
+
+
+      setLoading(false);
+
+
+    }
+
+
   };
 
+
+
+
+
+
   return (
-    <div className="container mt-5" style={{ maxWidth: "500px" }}>
 
-      <div className="card shadow">
+    <div className="auth-page">
 
-        <div className="card-header bg-primary text-white">
-          <h2 className="text-center">Login</h2>
+
+      <div className="auth-card">
+
+
+
+
+
+        <div className="auth-logo">
+
+
+          <div className="logo-circle">
+
+
+            <FaGraduationCap />
+
+
+          </div>
+
+
+
+          <h1>
+
+            Student Portal
+
+          </h1>
+
+
+
+          <p>
+
+            Welcome back! Login to continue.
+
+          </p>
+
+
+
         </div>
 
-        <div className="card-body">
 
-          <form onSubmit={handleSubmit}>
 
-            <div className="mb-3">
-              <label>Email</label>
+
+
+
+
+
+        <form onSubmit={handleSubmit}>
+
+
+
+
+
+          <div className="auth-input-group">
+
+
+            <label>
+
+              Email Address
+
+            </label>
+
+
+
+            <div className="auth-input">
+
+
+              <FaEnvelope />
+
+
 
               <input
+
                 type="email"
-                className="form-control"
+
                 name="email"
-                placeholder="Enter Email"
+
+                placeholder="Enter email"
+
                 value={formData.email}
+
                 onChange={handleChange}
+
                 required
+
               />
+
+
             </div>
 
-            <div className="mb-3">
-              <label>Password</label>
+
+          </div>
+
+
+
+
+
+
+
+
+          <div className="auth-input-group">
+
+
+            <label>
+
+              Password
+
+            </label>
+
+
+
+            <div className="auth-input">
+
+
+              <FaLock />
+
+
 
               <input
+
                 type="password"
-                className="form-control"
+
                 name="password"
-                placeholder="Enter Password"
+
+                placeholder="Enter password"
+
                 value={formData.password}
+
                 onChange={handleChange}
+
                 required
+
               />
+
+
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary w-100"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
 
-          </form>
+          </div>
 
-        </div>
+
+
+
+
+
+
+
+          <button
+
+            type="submit"
+
+            className="auth-btn"
+
+            disabled={loading}
+
+          >
+
+
+
+            <FaSignInAlt />
+
+
+
+            {
+
+              loading
+
+              ?
+
+              "Logging in..."
+
+              :
+
+              "Login"
+
+            }
+
+
+
+          </button>
+
+
+
+
+
+        </form>
+
+
+
+
 
       </div>
 
+
+
     </div>
+
+
   );
+
+
 }
+
+
 
 export default Login;

@@ -1,0 +1,227 @@
+/* ==========================================
+   Sidebar
+========================================== */
+
+.sidebar {
+  width: 280px;
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  background: #111827;
+
+  border-right: 1px solid #1f2937;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 24px;
+
+  transition: 0.3s ease;
+
+  z-index: 1000;
+}
+
+/* ==========================================
+   Logo
+========================================== */
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(
+    135deg,
+    #3b82f6,
+    #2563eb
+  );
+
+  color: white;
+
+  font-size: 24px;
+
+  box-shadow: 0 12px 25px rgba(59, 130, 246, 0.35);
+}
+
+.logo-title {
+  color: white;
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+.logo-subtitle {
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+/* ==========================================
+   Menu
+========================================== */
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.menu-item {
+  width: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 15px 18px;
+
+  border-radius: 14px;
+
+  color: #cbd5e1;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  transition: 0.3s ease;
+}
+
+.menu-item:hover {
+  background: #2563eb;
+
+  color: white;
+
+  transform: translateX(6px);
+}
+
+.menu-item.active {
+  background: #3b82f6;
+
+  color: white;
+
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.menu-icon {
+  font-size: 18px;
+}
+
+/* ==========================================
+   Footer
+========================================== */
+
+.sidebar-footer {
+  border-top: 1px solid #334155;
+
+  padding-top: 20px;
+}
+
+.user-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 50%;
+
+  background: #3b82f6;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+
+  font-weight: bold;
+
+  font-size: 20px;
+}
+
+.user-name {
+  color: white;
+
+  font-weight: 600;
+}
+
+.user-role {
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+/* ==========================================
+   Logout
+========================================== */
+
+.logout-btn {
+  width: 100%;
+
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: #dc2626;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #b91c1c;
+
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media (max-width: 992px) {
+
+  .sidebar {
+    left: -280px;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+}

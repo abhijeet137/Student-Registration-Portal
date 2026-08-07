@@ -1,0 +1,282 @@
+/* ==========================================
+   Student Profile
+========================================== */
+
+
+.profile-page {
+
+    width:100%;
+
+}
+
+
+
+/* ==========================================
+   Header
+========================================== */
+
+
+.profile-header {
+
+    margin-bottom:30px;
+
+}
+
+
+.profile-header h1 {
+
+    color:white;
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin:0;
+
+}
+
+
+.profile-header p {
+
+    color:#94A3B8;
+
+    margin-top:8px;
+
+}
+
+
+
+/* ==========================================
+   Profile Card
+========================================== */
+
+
+.profile-card {
+
+    background:#1E293B;
+
+    border-radius:25px;
+
+    padding:35px;
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,.25);
+
+    text-align:center;
+
+}
+
+
+
+/* ==========================================
+   Avatar
+========================================== */
+
+
+.profile-avatar img {
+
+    width:160px;
+
+    height:160px;
+
+    border-radius:50%;
+
+    border:5px solid #3B82F6;
+
+}
+
+
+
+.profile-card h2 {
+
+    color:white;
+
+    margin-top:20px;
+
+    font-size:28px;
+
+}
+
+
+
+.profile-email {
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#94A3B8;
+
+}
+
+
+
+/* ==========================================
+   Information Grid
+========================================== */
+
+
+.profile-info-grid {
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+    gap:20px;
+
+    margin-top:35px;
+
+    text-align:left;
+
+}
+
+
+
+.profile-info-box {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    background:#0F172A;
+
+    border:1px solid #334155;
+
+    padding:20px;
+
+    border-radius:18px;
+
+}
+
+
+
+.profile-info-box svg {
+
+    color:#3B82F6;
+
+    font-size:24px;
+
+}
+
+
+
+.profile-info-box span {
+
+    color:#94A3B8;
+
+    font-size:13px;
+
+}
+
+
+
+.profile-info-box h4 {
+
+    color:white;
+
+    margin:
+
+    5px 0 0;
+
+    font-size:16px;
+
+}
+
+
+
+.full-profile-box {
+
+    grid-column:
+
+    1 / -1;
+
+}
+
+
+
+/* ==========================================
+   Edit Button
+========================================== */
+
+
+.profile-edit-btn {
+
+    margin-top:35px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    padding:15px 35px;
+
+    border-radius:16px;
+
+    background:#F59E0B;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+
+
+.profile-edit-btn:hover {
+
+    background:#D97706;
+
+    color:white;
+
+    transform:translateY(-3px);
+
+}
+
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+
+@media(max-width:700px){
+
+
+.profile-card {
+
+    padding:20px;
+
+}
+
+
+.profile-info-grid {
+
+    grid-template-columns:1fr;
+
+}
+
+
+.profile-header h1 {
+
+    font-size:28px;
+
+}
+
+
+}

@@ -1,14 +1,32 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  FaUserGraduate,
+  FaUserShield,
+  FaBuilding,
+  FaLayerGroup,
+  FaPlus,
+  FaUsers,
+  FaArrowRight,
+} from "react-icons/fa";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+
 import Layout from "../components/Layout";
 import DashboardChart from "../components/DashboardChart";
 import API from "../services/api";
 
+import "../styles/dashboard.css";
+
 function AdminDashboard() {
+
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
+  const user =
+    JSON.parse(localStorage.getItem("user"));
+
+  const [loading, setLoading] =
+    useState(true);
 
   const [stats, setStats] = useState({
     totalStudents: 0,
@@ -17,283 +35,431 @@ function AdminDashboard() {
     semesters: 0,
   });
 
-  const [departmentStats, setDepartmentStats] = useState([]);
-  const [latestStudents, setLatestStudents] = useState([]);
+  const [departmentStats, setDepartmentStats] =
+    useState([]);
+
+  const [latestStudents, setLatestStudents] =
+    useState([]);
 
   useEffect(() => {
     fetchDashboard();
   }, []);
 
   const fetchDashboard = async () => {
+
     try {
-      const response = await API.get("/admin/dashboard");
+
+      const response =
+        await API.get("/admin/dashboard");
 
       setStats(response.data.stats);
-      setDepartmentStats(response.data.departmentStats);
-      setLatestStudents(response.data.latestStudents);
+
+      setDepartmentStats(
+        response.data.departmentStats
+      );
+
+      setLatestStudents(
+        response.data.latestStudents
+      );
+
     } catch (error) {
+
       console.log(error);
 
       toast.error(
         error.response?.data?.message ||
           "Failed to load dashboard"
       );
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
-  const logout = () => {
-    localStorage.clear();
+  const cards = [
 
-    toast.success("Logged out successfully!");
+    {
+      title: "Students",
+      value: stats.totalStudents,
+      icon: <FaUserGraduate />,
+      color: "#3B82F6",
+    },
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 1000);
-  };
+    {
+      title: "Admins",
+      value: stats.totalAdmins,
+      icon: <FaUserShield />,
+      color: "#22C55E",
+    },
+
+    {
+      title: "Departments",
+      value: stats.departments,
+      icon: <FaBuilding />,
+      color: "#F59E0B",
+    },
+
+    {
+      title: "Semesters",
+      value: stats.semesters,
+      icon: <FaLayerGroup />,
+      color: "#EF4444",
+    },
+
+  ];
 
   if (loading) {
+
     return (
+
       <Layout>
-        <div className="container mt-5 text-center">
+
+        <div className="dashboard-loading">
+
+          <div className="loader"></div>
+
           <h3>Loading Dashboard...</h3>
+
         </div>
+
       </Layout>
+
     );
+
   }
 
   return (
+
     <Layout>
 
-      <div className="container-fluid">
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 25,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: .4,
+        }}
+      >
 
-        <h2 className="mb-4">
-          👨‍💼 Admin Dashboard
-        </h2>
+        {/* Welcome Section */}
+
+        <div className="welcome-card">
+
+          <div>
+
+            <h1>
+
+              Welcome back,
+              {" "}
+              {user?.name}
+
+              👋
+
+            </h1>
+
+            <p>
+
+              Manage your students,
+              departments,
+              reports and registrations
+              from one place.
+
+            </p>
+
+          </div>
+
+        </div>
 
         {/* Statistics */}
 
-        <div className="row g-3">
+        <div className="stats-grid">
 
-          <div className="col-12 col-sm-6 col-lg-3">
+          {cards.map((card, index) => (
 
-            <div className="card shadow bg-primary text-white h-100">
+            <motion.div
 
-              <div className="card-body text-center">
+              key={index}
 
-                <h6>Total Students</h6>
+              whileHover={{
+                y: -8,
+              }}
 
-                <h2>{stats.totalStudents}</h2>
+              className="stat-card"
 
-              </div>
+            >
 
-            </div>
+              <div
+                className="stat-icon"
+                style={{
+                  background:
+                    card.color,
+                }}
+              >
 
-          </div>
-
-          <div className="col-12 col-sm-6 col-lg-3">
-
-            <div className="card shadow bg-success text-white h-100">
-
-              <div className="card-body text-center">
-
-                <h6>Total Admins</h6>
-
-                <h2>{stats.totalAdmins}</h2>
+                {card.icon}
 
               </div>
 
-            </div>
+              <div>
 
-          </div>
+                <h2>
 
-          <div className="col-12 col-sm-6 col-lg-3">
+                  {card.value}
 
-            <div className="card shadow bg-warning h-100">
+                </h2>
 
-              <div className="card-body text-center">
+                <span>
 
-                <h6>Departments</h6>
+                  {card.title}
 
-                <h2>{stats.departments}</h2>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="col-12 col-sm-6 col-lg-3">
-
-            <div className="card shadow bg-danger text-white h-100">
-
-              <div className="card-body text-center">
-
-                <h6>Semesters</h6>
-
-                <h2>{stats.semesters}</h2>
+                </span>
 
               </div>
 
-            </div>
+            </motion.div>
 
-          </div>
+          ))}
 
         </div>
+                {/* Chart & Recent Students */}
 
-        {/* Chart */}
+        <div className="dashboard-row">
 
-        <div className="mt-4">
+          {/* Department Chart */}
 
-          <DashboardChart
-            departmentStats={departmentStats}
-          />
+          <motion.div
+            className="dashboard-card chart-card"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: .2 }}
+          >
 
-        </div>
+            <div className="card-header-custom">
 
-        {/* Latest Students */}
+              <h3>
+                Department Statistics
+              </h3>
 
-        <div className="card shadow mt-4">
+            </div>
 
-          <div className="card-header bg-dark text-white">
+            <DashboardChart
+              departmentStats={
+                departmentStats
+              }
+            />
 
-            <h5 className="mb-0">
-              Latest Registered Students
-            </h5>
+          </motion.div>
 
-          </div>
+          {/* Latest Students */}
 
-          <div className="card-body">
+          <motion.div
+            className="dashboard-card"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: .3 }}
+          >
 
-            <div className="table-responsive">
+            <div className="card-header-custom">
 
-              <table className="table table-hover table-bordered align-middle">
+              <h3>
+                Latest Students
+              </h3>
 
-                <thead className="table-dark">
+            </div>
 
-                  <tr>
+            <div className="latest-list">
 
-                    <th>Roll No</th>
+              {latestStudents.length > 0 ? (
 
-                    <th>Name</th>
+                latestStudents.map(
+                  (student) => (
 
-                    <th>Department</th>
+                    <div
+                      key={student._id}
+                      className="student-item"
+                    >
 
-                    <th>Semester</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {latestStudents.length > 0 ? (
-
-                    latestStudents.map((student) => (
-
-                      <tr key={student._id}>
-
-                        <td>{student.rollNumber}</td>
-
-                        <td>{student.name}</td>
-
-                        <td>{student.department}</td>
-
-                        <td>{student.semester}</td>
-
-                      </tr>
-
-                    ))
-
-                  ) : (
-
-                    <tr>
-
-                      <td
-                        colSpan="4"
-                        className="text-center"
+                      <div
+                        className="student-avatar"
                       >
-                        No Students Found
-                      </td>
+                        {student.name
+                          ?.charAt(0)
+                          .toUpperCase()}
+                      </div>
 
-                    </tr>
+                      <div
+                        className="student-info"
+                      >
 
-                  )}
+                        <h5>
+                          {student.name}
+                        </h5>
 
-                </tbody>
+                        <span>
+                          {
+                            student.rollNumber
+                          }
+                        </span>
 
-              </table>
+                      </div>
+
+                      <div
+                        className="student-badge"
+                      >
+
+                        {
+                          student.department
+                        }
+
+                      </div>
+
+                    </div>
+
+                  )
+                )
+
+              ) : (
+
+                <div
+                  className="empty-state"
+                >
+
+                  No Students Found
+
+                </div>
+
+              )}
 
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Quick Actions */}
 
-        <div className="card shadow mt-4">
+        <motion.div
 
-          <div className="card-header bg-secondary text-white">
+          className="dashboard-card"
 
-            <h5 className="mb-0">
+          initial={{
+            opacity: 0,
+          }}
+
+          animate={{
+            opacity: 1,
+          }}
+
+          transition={{
+            delay: .4,
+          }}
+
+        >
+
+          <div
+            className="card-header-custom"
+          >
+
+            <h3>
+
               Quick Actions
-            </h5>
+
+            </h3>
 
           </div>
 
-          <div className="card-body">
+          <div className="action-grid">
 
-            <div className="row g-2">
+            <button
 
-              <div className="col-12 col-md-4">
+              className="action-btn"
 
-                <button
-                  className="btn btn-success w-100"
-                  onClick={() =>
-                    navigate("/admin/add-student")
-                  }
-                >
-                  ➕ Add Student
-                </button>
+              onClick={() =>
+                navigate(
+                  "/admin/add-student"
+                )
+              }
 
-              </div>
+            >
 
-              <div className="col-12 col-md-4">
+              <FaPlus />
 
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() =>
-                    navigate("/admin/students")
-                  }
-                >
-                  👨‍🎓 View Students
-                </button>
+              <span>
+                Add Student
+              </span>
 
-              </div>
+            </button>
 
-              <div className="col-12 col-md-4">
+            <button
 
-                <button
-                  className="btn btn-danger w-100"
-                  onClick={logout}
-                >
-                  🚪 Logout
-                </button>
+              className="action-btn"
 
-              </div>
+              onClick={() =>
+                navigate(
+                  "/admin/students"
+                )
+              }
 
-            </div>
+            >
+
+              <FaUsers />
+
+              <span>
+                Manage Students
+              </span>
+
+            </button>
+
+            <button
+
+              className="action-btn"
+
+              onClick={() =>
+                navigate(
+                  "/admin/students"
+                )
+              }
+
+            >
+
+              <FaArrowRight />
+
+              <span>
+                View Reports
+              </span>
+
+            </button>
 
           </div>
+
+        </motion.div>
+                {/* Footer */}
+
+        <div className="dashboard-footer">
+
+          <p>
+
+            © {new Date().getFullYear()} EduPortal •
+            Student Registration Portal
+
+          </p>
 
         </div>
 
-      </div>
+      </motion.div>
 
     </Layout>
+
   );
+
 }
 
 export default AdminDashboard;

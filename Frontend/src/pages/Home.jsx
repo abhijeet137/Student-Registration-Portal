@@ -1,229 +1,443 @@
 import { Link } from "react-router-dom";
 
+import {
+  FaGraduationCap,
+  FaUserGraduate,
+  FaBuilding,
+  FaBook,
+  FaLock,
+  FaDatabase,
+  FaCode,
+  FaMobileAlt,
+} from "react-icons/fa";
+
+import "../styles/home.css";
+
+
 function Home() {
+
+
+  const stats = [
+
+    {
+      icon: <FaUserGraduate />,
+      number: "1000+",
+      title: "Students",
+    },
+
+    {
+      icon: <FaBuilding />,
+      number: "5",
+      title: "Departments",
+    },
+
+    {
+      icon: <FaBook />,
+      number: "8",
+      title: "Semesters",
+    },
+
+    {
+      icon: <FaLock />,
+      number: "100%",
+      title: "Secure",
+    },
+
+  ];
+
+
+
+  const features = [
+
+    {
+      icon: <FaUserGraduate />,
+      title: "Student Management",
+      text: "Add, edit, search and manage student records efficiently.",
+    },
+
+
+    {
+      icon: <FaLock />,
+      title: "Secure Authentication",
+      text: "JWT authentication keeps your data safe and protected.",
+    },
+
+
+    {
+      icon: <FaMobileAlt />,
+      title: "Responsive Design",
+      text: "Works perfectly on desktop, tablet and mobile devices.",
+    },
+
+  ];
+
+
+
+  const technologies = [
+
+    {
+      icon: <FaCode />,
+      name: "React.js",
+    },
+
+
+    {
+      icon: <FaCode />,
+      name: "Node.js",
+    },
+
+
+    {
+      icon: <FaCode />,
+      name: "Express.js",
+    },
+
+
+    {
+      icon: <FaDatabase />,
+      name: "MongoDB",
+    },
+
+  ];
+
+
+
   return (
-    <>
-      {/* Hero Section */}
 
-      <div
-        className="text-white"
-        style={{
-          background: "linear-gradient(135deg,#0d6efd,#6610f2)",
-          minHeight: "90vh",
-        }}
-      >
-        <div className="container py-5">
+    <div className="home-page">
 
-          <div className="row align-items-center">
 
-            <div className="col-lg-6">
 
-              <h1 className="display-3 fw-bold">
-                🎓 Student Registration Portal
-              </h1>
+      {/* HERO SECTION */}
 
-              <p className="lead mt-4">
-                A complete MERN Stack Student Management System
-                designed for universities and colleges.
+      <section className="hero-section">
+
+
+        <div className="hero-container">
+
+
+          <div className="hero-content">
+
+
+            <div className="hero-icon">
+
+              <FaGraduationCap />
+
+            </div>
+
+
+
+            <h1>
+
+              Student Registration Portal
+
+            </h1>
+
+
+
+            <p>
+
+              A complete MERN Stack Student Management
+              System designed for universities and colleges.
+
+            </p>
+
+
+
+
+            <div className="hero-buttons">
+
+
+              <Link
+                to="/login"
+                className="home-primary-btn"
+              >
+
+                Login
+
+              </Link>
+
+
+
+
+              <Link
+                to="/register"
+                className="home-secondary-btn"
+              >
+
+                Register
+
+              </Link>
+
+
+            </div>
+
+
+          </div>
+
+
+
+
+
+          <div className="hero-box">
+
+
+            <FaGraduationCap />
+
+
+            <h3>
+
+              Smart Education System
+
+            </h3>
+
+
+            <p>
+
+              Manage students, academics and records
+              easily from one platform.
+
+            </p>
+
+
+          </div>
+
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+
+
+      {/* STATISTICS */}
+
+
+      <section className="stats-section">
+
+
+        <div className="stats-grid">
+
+
+          {stats.map((item,index)=>(
+
+
+            <div
+              className="stat-card"
+              key={index}
+            >
+
+
+              <div className="stat-icon">
+
+                {item.icon}
+
+              </div>
+
+
+
+              <h2>
+
+                {item.number}
+
+              </h2>
+
+
+
+              <p>
+
+                {item.title}
+
               </p>
 
-              <div className="mt-4">
-
-                <Link
-                  to="/login"
-                  className="btn btn-light btn-lg me-3"
-                >
-                  Login
-                </Link>
-
-                <Link
-                  to="/register"
-                  className="btn btn-outline-light btn-lg"
-                >
-                  Register
-                </Link>
-
-              </div>
 
             </div>
 
-            <div className="col-lg-6 text-center mt-5 mt-lg-0">
 
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
-                alt="Student"
-                className="img-fluid"
-                style={{
-                  maxHeight: "420px",
-                }}
-              />
+          ))}
 
-            </div>
-
-          </div>
 
         </div>
 
-      </div>
 
-      {/* Statistics */}
+      </section>
 
-      <div className="container py-5">
 
-        <div className="row g-4">
 
-          <div className="col-md-3">
-            <div className="card shadow text-center h-100">
-              <div className="card-body">
-                <h1>👨‍🎓</h1>
-                <h3>1000+</h3>
-                <p>Students</p>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-md-3">
-            <div className="card shadow text-center h-100">
-              <div className="card-body">
-                <h1>🏫</h1>
-                <h3>5</h3>
-                <p>Departments</p>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-md-3">
-            <div className="card shadow text-center h-100">
-              <div className="card-body">
-                <h1>📚</h1>
-                <h3>8</h3>
-                <p>Semesters</p>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-md-3">
-            <div className="card shadow text-center h-100">
-              <div className="card-body">
-                <h1>🔐</h1>
-                <h3>100%</h3>
-                <p>Secure</p>
-              </div>
-            </div>
-          </div>
 
-        </div>
+      {/* FEATURES */}
 
-      </div>
 
-      {/* Features */}
+      <section className="features-section">
 
-      <div className="container pb-5">
 
-        <h2 className="text-center fw-bold mb-5">
+        <h2>
+
           Why Choose Our Portal?
+
         </h2>
 
-        <div className="row g-4">
 
-          <div className="col-lg-4">
-            <div className="card shadow h-100 text-center">
-              <div className="card-body">
-                <h1>📚</h1>
-                <h4>Student Management</h4>
-                <p>
-                  Add, edit, search and manage students
-                  efficiently.
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-lg-4">
-            <div className="card shadow h-100 text-center">
-              <div className="card-body">
-                <h1>🔒</h1>
-                <h4>Secure Authentication</h4>
-                <p>
-                  JWT authentication keeps your data safe
-                  and protected.
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-lg-4">
-            <div className="card shadow h-100 text-center">
-              <div className="card-body">
-                <h1>📱</h1>
-                <h4>Responsive Design</h4>
-                <p>
-                  Works perfectly on desktop, tablet and
-                  mobile devices.
-                </p>
+        <div className="features-grid">
+
+
+          {features.map((item,index)=>(
+
+
+            <div
+              className="feature-card"
+              key={index}
+            >
+
+
+              <div className="feature-icon">
+
+                {item.icon}
+
               </div>
+
+
+
+              <h3>
+
+                {item.title}
+
+              </h3>
+
+
+
+              <p>
+
+                {item.text}
+
+              </p>
+
+
+
             </div>
-          </div>
+
+
+          ))}
+
 
         </div>
 
-      </div>
 
-      {/* Technology */}
+      </section>
 
-      <div className="bg-light py-5">
 
-        <div className="container text-center">
 
-          <h2 className="fw-bold mb-4">
-            Technology Stack
-          </h2>
 
-          <div className="row g-4">
 
-            <div className="col-6 col-md-3">
-              <h1>⚛️</h1>
-              <h5>React</h5>
+
+
+      {/* TECHNOLOGY */}
+
+
+      <section className="technology-section">
+
+
+        <h2>
+
+          Technology Stack
+
+        </h2>
+
+
+
+
+        <div className="technology-grid">
+
+
+          {technologies.map((item,index)=>(
+
+
+            <div
+              className="technology-card"
+              key={index}
+            >
+
+
+              <div>
+
+                {item.icon}
+
+              </div>
+
+
+
+              <h4>
+
+                {item.name}
+
+              </h4>
+
+
             </div>
 
-            <div className="col-6 col-md-3">
-              <h1>🟢</h1>
-              <h5>Node.js</h5>
-            </div>
 
-            <div className="col-6 col-md-3">
-              <h1>🚀</h1>
-              <h5>Express</h5>
-            </div>
+          ))}
 
-            <div className="col-6 col-md-3">
-              <h1>🍃</h1>
-              <h5>MongoDB</h5>
-            </div>
-
-          </div>
 
         </div>
 
-      </div>
 
-      {/* Footer */}
+      </section>
 
-      <footer className="bg-dark text-white text-center py-4">
 
-        <h5>Student Registration Portal</h5>
 
-        <p className="mb-1">
-          MERN Stack Minor Project
+
+
+
+
+      {/* FOOTER */}
+
+
+      <footer className="home-footer">
+
+
+        <h3>
+
+          🎓 Student Registration Portal
+
+        </h3>
+
+
+
+        <p>
+
+          MERN Stack Student Management System
+
         </p>
 
+
+
         <small>
+
           © 2026 All Rights Reserved
+
         </small>
 
+
       </footer>
-    </>
+
+
+
+    </div>
+
   );
+
 }
+
 
 export default Home;

@@ -1,8 +1,24 @@
-import { useNavigate } from "react-router-dom";
+import {
+  FaHome,
+  FaUserGraduate,
+  FaUser,
+  FaUserEdit,
+  FaKey,
+  FaInfoCircle,
+  FaSignOutAlt,
+  FaPlus,
+  FaGraduationCap,
+} from "react-icons/fa";
+
+import { motion } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 import API from "../services/api";
 
-function Sidebar({ closeSidebar }) {
+import "../styles/sidebar.css";
+
+function Sidebar({ isOpen, closeSidebar }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -23,93 +39,160 @@ function Sidebar({ closeSidebar }) {
 
     localStorage.removeItem("user");
 
-    if (closeSidebar) {
-      closeSidebar();
-    }
-
-    navigate("/", { replace: true });
+    navigate("/", {
+      replace: true,
+    });
 
     window.location.reload();
   };
 
+  const adminMenu = [
+    {
+      title: "Dashboard",
+      icon: <FaHome />,
+      path: "/admin/dashboard",
+    },
+    {
+      title: "Students",
+      icon: <FaUserGraduate />,
+      path: "/admin/students",
+    },
+    {
+      title: "Add Student",
+      icon: <FaPlus />,
+      path: "/admin/add-student",
+    },
+  ];
+
+  const studentMenu = [
+    {
+      title: "Dashboard",
+      icon: <FaHome />,
+      path: "/student/dashboard",
+    },
+    {
+      title: "My Profile",
+      icon: <FaUser />,
+      path: "/student/profile",
+    },
+    {
+      title: "Edit Profile",
+      icon: <FaUserEdit />,
+      path: "/student/edit-profile",
+    },
+    {
+      title: "Change Password",
+      icon: <FaKey />,
+      path: "/student/change-password",
+    },
+    {
+      title: "About",
+      icon: <FaInfoCircle />,
+      path: "/student/about",
+    },
+  ];
+
+  const menu =
+    user?.role === "admin"
+      ? adminMenu
+      : studentMenu;
+
   return (
-    <div
-      className="bg-dark text-white p-3"
-      style={{
-        minHeight: "100%",
-      }}
+    <motion.aside
+      className={`sidebar ${isOpen ? "show" : ""}`}
+      initial={{ x: -100 }}
+      animate={{ x: 0 }}
+      transition={{ duration: 0.35 }}
     >
-      {user?.role === "admin" && (
-        <>
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/admin/dashboard")}
-          >
-            🏠 Dashboard
-          </button>
+      {/* Logo */}
 
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/admin/students")}
-          >
-            👨‍🎓 Students
-          </button>
+      <div>
 
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/admin/add-student")}
-          >
-            ➕ Add Student
-          </button>
-        </>
-      )}
+        <div className="sidebar-logo">
 
-      {user?.role === "student" && (
-        <>
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/student/dashboard")}
-          >
-            🏠 Dashboard
-          </button>
+          <div className="logo-icon">
+            <FaGraduationCap />
+          </div>
 
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/student/profile")}
-          >
-            👤 My Profile
-          </button>
+          <div>
 
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/student/edit-profile")}
-          >
-            ✏ Edit Profile
-          </button>
+            <div className="logo-title">
+              EduPortal
+            </div>
 
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/student/change-password")}
-          >
-            🔐 Change Password
-          </button>
+            <div className="logo-subtitle">
+              Student Management
+            </div>
 
-          <button
-            className="btn btn-outline-light w-100 mb-2"
-            onClick={() => goTo("/student/about")}
-          >
-            ℹ About Portal
-          </button>
-        </>
-      )}
+          </div>
 
-      <button
-        className="btn btn-danger w-100 mt-3"
-        onClick={logout}
-      >
-        🚪 Logout
-      </button>
-    </div>
+        </div>
+
+        {/* Menu */}
+
+        <div className="sidebar-menu">
+
+          {menu.map((item) => (
+
+            <button
+              key={item.path}
+              onClick={() => goTo(item.path)}
+              className={`menu-item ${
+                location.pathname === item.path
+                  ? "active"
+                  : ""
+              }`}
+            >
+
+              <span className="menu-icon">
+                {item.icon}
+              </span>
+
+              {item.title}
+
+            </button>
+
+          ))}
+
+        </div>
+
+      </div>
+
+      {/* Footer */}
+
+      <div className="sidebar-footer">
+
+        <div className="user-card">
+
+          <div className="user-avatar">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+
+          <div>
+
+            <div className="user-name">
+              {user?.name}
+            </div>
+
+            <div className="user-role">
+              {user?.role}
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          className="logout-btn"
+          onClick={logout}
+        >
+          <FaSignOutAlt />
+          &nbsp; Logout
+        </button>
+
+      </div>
+
+    </motion.aside>
   );
 }
 

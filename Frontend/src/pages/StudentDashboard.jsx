@@ -1,206 +1,477 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import {
+  FaUserGraduate,
+  FaEnvelope,
+  FaIdCard,
+  FaBuilding,
+  FaGraduationCap,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaEdit,
+  FaSignOutAlt,
+} from "react-icons/fa";
+
 import { toast } from "react-toastify";
+
 import Layout from "../components/Layout";
 import API from "../services/api";
 
-function StudentDashboard() {
+import "../styles/studentDashboard.css";
+
+
+function StudentDashboard(){
+
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
 
-  const [student, setStudent] = useState({
-    name: "",
-    email: "",
-    rollNumber: "",
-    department: "",
-    semester: "",
-    phone: "",
-    address: "",
-  });
+  const [loading,setLoading] =
+    useState(true);
 
-  useEffect(() => {
+
+
+  const [student,setStudent] =
+    useState({
+
+      name:"",
+      email:"",
+      rollNumber:"",
+      department:"",
+      semester:"",
+      phone:"",
+      address:"",
+
+    });
+
+
+
+  useEffect(()=>{
+
     fetchProfile();
-  }, []);
 
-  const fetchProfile = async () => {
-    try {
-      const response = await API.get("/student/profile");
+  },[]);
 
-      if (response.data.success) {
-        setStudent(response.data.student);
+
+
+  const fetchProfile = async()=>{
+
+    try{
+
+
+      const response =
+        await API.get(
+          "/student/profile"
+        );
+
+
+
+      if(response.data.success){
+
+        setStudent(
+          response.data.student
+        );
+
       }
-    } catch (error) {
+
+
+    }
+
+    catch(error){
+
       console.log(error);
 
+
       toast.error(
+
         error.response?.data?.message ||
-          "Failed to load profile"
+
+        "Failed to load profile"
+
       );
-    } finally {
-      setLoading(false);
+
+
     }
+
+    finally{
+
+      setLoading(false);
+
+    }
+
   };
 
-  const logout = () => {
+
+
+  const logout=()=>{
+
     localStorage.clear();
 
-    toast.success("Logged out successfully!");
 
-    setTimeout(() => {
+    toast.success(
+      "Logged out successfully!"
+    );
+
+
+    setTimeout(()=>{
+
       navigate("/login");
-    }, 1000);
+
+    },1000);
+
+
   };
 
-  if (loading) {
-    return (
+
+
+  if(loading){
+
+    return(
+
       <Layout>
-        <div className="container text-center mt-5">
-          <h3>Loading Dashboard...</h3>
+
+        <div className="dashboard-loading">
+
+          <div className="loader"></div>
+
+          <h3>
+            Loading Dashboard...
+          </h3>
+
         </div>
+
       </Layout>
+
     );
+
   }
 
+
   return (
+
     <Layout>
 
-      <div className="container-fluid">
+      <div className="student-dashboard">
 
-        <h2 className="mb-4">
-          👨‍🎓 Student Dashboard
-        </h2>
 
-        <div className="row g-4">
+        {/* Welcome */}
+
+        <div className="student-welcome">
+
+          <h1>
+            Welcome,
+            {" "}
+            {student.name}
+            👋
+          </h1>
+
+          <p>
+            Manage your profile and
+            student information here.
+          </p>
+
+        </div>
+                {/* Main Content */}
+
+        <div className="student-grid">
+
 
           {/* Profile Card */}
 
-          <div className="col-12 col-lg-4">
 
-            <div className="card shadow border-0 h-100">
+          <div className="student-profile-card">
 
-              <div className="card-body text-center">
 
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    student.name || "Student"
-                  )}&background=0D6EFD&color=fff&size=180`}
-                  alt="Profile"
-                  className="rounded-circle img-fluid mb-3"
-                  style={{
-                    maxWidth: "150px",
-                  }}
-                />
+            <div className="profile-image">
 
-                <h3>{student.name}</h3>
 
-                <p className="text-muted">
-                  {student.email}
-                </p>
+              <img
 
-              </div>
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  student.name || "Student"
+                )}&background=2563EB&color=fff&size=200`}
+
+                alt="Profile"
+
+              />
+
 
             </div>
 
-          </div>
 
-          {/* Information */}
 
-          <div className="col-12 col-lg-8">
+            <h2>
 
-            <div className="card shadow border-0 h-100">
+              {student.name}
 
-              <div className="card-header bg-primary text-white">
+            </h2>
 
-                <h4 className="mb-0">
-                  Student Information
-                </h4>
 
-              </div>
 
-              <div className="card-body">
+            <p>
 
-                <div className="table-responsive">
+              <FaEnvelope />
 
-                  <table className="table table-bordered align-middle">
+              {student.email}
 
-                    <tbody>
+            </p>
 
-                      <tr>
-                        <th>Roll Number</th>
-                        <td>{student.rollNumber}</td>
-                      </tr>
 
-                      <tr>
-                        <th>Department</th>
-                        <td>{student.department}</td>
-                      </tr>
 
-                      <tr>
-                        <th>Semester</th>
-                        <td>{student.semester}</td>
-                      </tr>
+            <div className="student-role">
 
-                      <tr>
-                        <th>Phone</th>
-                        <td>
-                          {student.phone || "Not Available"}
-                        </td>
-                      </tr>
+              <FaUserGraduate />
 
-                      <tr>
-                        <th>Address</th>
-                        <td>
-                          {student.address || "Not Available"}
-                        </td>
-                      </tr>
-
-                    </tbody>
-
-                  </table>
-
-                </div>
-
-                <div className="row g-2 mt-3">
-
-                  <div className="col-12 col-md-6">
-
-                    <button
-                      className="btn btn-warning w-100"
-                      onClick={() =>
-                        navigate("/student/edit-profile")
-                      }
-                    >
-                      ✏ Edit Profile
-                    </button>
-
-                  </div>
-
-                  <div className="col-12 col-md-6">
-
-                    <button
-                      className="btn btn-danger w-100"
-                      onClick={logout}
-                    >
-                      🚪 Logout
-                    </button>
-
-                  </div>
-
-                </div>
-
-              </div>
+              Student
 
             </div>
 
+
+
           </div>
+
+
+
+
+
+
+          {/* Information Card */}
+
+
+          <div className="student-info-card">
+
+
+            <div className="student-card-title">
+
+              <h2>
+
+                Student Information
+
+              </h2>
+
+            </div>
+
+
+
+
+            <div className="info-grid">
+
+
+
+              {/* Roll Number */}
+
+
+              <div className="info-box">
+
+
+                <FaIdCard />
+
+
+                <div>
+
+                  <span>
+                    Roll Number
+                  </span>
+
+
+                  <h4>
+                    {student.rollNumber}
+                  </h4>
+
+                </div>
+
+
+              </div>
+
+
+
+
+
+              {/* Department */}
+
+
+              <div className="info-box">
+
+
+                <FaBuilding />
+
+
+                <div>
+
+                  <span>
+                    Department
+                  </span>
+
+
+                  <h4>
+                    {student.department}
+                  </h4>
+
+                </div>
+
+
+              </div>
+
+
+
+
+
+              {/* Semester */}
+
+
+              <div className="info-box">
+
+
+                <FaGraduationCap />
+
+
+                <div>
+
+                  <span>
+                    Semester
+                  </span>
+
+
+                  <h4>
+                    Semester {student.semester}
+                  </h4>
+
+                </div>
+
+
+              </div>
+
+
+
+
+
+              {/* Phone */}
+
+
+              <div className="info-box">
+
+
+                <FaPhone />
+
+
+                <div>
+
+                  <span>
+                    Phone
+                  </span>
+
+
+                  <h4>
+
+                    {
+                      student.phone ||
+                      "Not Available"
+                    }
+
+                  </h4>
+
+                </div>
+
+
+              </div>
+
+
+
+
+              {/* Address */}
+
+
+              <div className="info-box full-info">
+
+
+                <FaMapMarkerAlt />
+
+
+                <div>
+
+                  <span>
+                    Address
+                  </span>
+
+
+                  <h4>
+
+                    {
+                      student.address ||
+                      "Not Available"
+                    }
+
+                  </h4>
+
+                </div>
+
+
+              </div>
+
+
+
+            </div>
+                        {/* Actions */}
+
+            <div className="student-actions">
+
+
+              <button
+
+                className="student-edit-btn"
+
+                onClick={() =>
+                  navigate(
+                    "/student/edit-profile"
+                  )
+                }
+
+              >
+
+                <FaEdit />
+
+                Edit Profile
+
+              </button>
+
+
+
+
+
+              <button
+
+                className="student-logout-btn"
+
+                onClick={logout}
+
+              >
+
+                <FaSignOutAlt />
+
+                Logout
+
+              </button>
+
+
+            </div>
+
+
+
+          </div>
+
 
         </div>
 
+
       </div>
 
+
     </Layout>
+
   );
+
+
 }
+
 
 export default StudentDashboard;

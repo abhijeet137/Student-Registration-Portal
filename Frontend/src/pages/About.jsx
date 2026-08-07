@@ -1,91 +1,235 @@
 import Layout from "../components/Layout";
 
-function About() {
+import {
+  FaGraduationCap,
+  FaCode,
+  FaServer,
+  FaDatabase,
+  FaShieldAlt,
+  FaCloud,
+  FaUserTie,
+  FaInfoCircle,
+} from "react-icons/fa";
+
+
+import "../styles/about.css";
+
+
+function About(){
+
+
+  const details = [
+
+    {
+      icon:<FaGraduationCap />,
+      title:"Project Name",
+      value:"Student Registration Portal"
+    },
+
+
+    {
+      icon:<FaInfoCircle />,
+      title:"Version",
+      value:"1.0"
+    },
+
+
+    {
+      icon:<FaCode />,
+      title:"Frontend",
+      value:"React.js + Bootstrap + Axios"
+    },
+
+
+    {
+      icon:<FaServer />,
+      title:"Backend",
+      value:"Node.js + Express.js"
+    },
+
+
+    {
+      icon:<FaDatabase />,
+      title:"Database",
+      value:"MongoDB Atlas"
+    },
+
+
+    {
+      icon:<FaShieldAlt />,
+      title:"Authentication",
+      value:"JWT (JSON Web Token)"
+    },
+
+
+    {
+      icon:<FaCloud />,
+      title:"Deployment",
+      value:"Frontend - Vercel | Backend - Render"
+    },
+
+
+    {
+      icon:<FaUserTie />,
+      title:"Developer",
+      value:"Abhijeet"
+    }
+
+  ];
+
+
+
   return (
+
     <Layout>
-      <div className="container">
 
-        <div className="card shadow border-0">
 
-          <div className="card-header bg-primary text-white">
-            <h2>ℹ About Student Registration Portal</h2>
-          </div>
+      <div className="about-page">
 
-          <div className="card-body">
 
-            <h4 className="mb-3">🎓 Project Information</h4>
+        {/* Header */}
 
-            <table className="table table-bordered">
+        <div className="about-header">
 
-              <tbody>
 
-                <tr>
-                  <th>Project Name</th>
-                  <td>Student Registration Portal</td>
-                </tr>
+          <h1>
+            About Student Registration Portal
+          </h1>
 
-                <tr>
-                  <th>Version</th>
-                  <td>1.0</td>
-                </tr>
 
-                <tr>
-                  <th>Frontend</th>
-                  <td>React.js + Bootstrap + Axios</td>
-                </tr>
+          <p>
+            Complete information about the project.
+          </p>
 
-                <tr>
-                  <th>Backend</th>
-                  <td>Node.js + Express.js</td>
-                </tr>
 
-                <tr>
-                  <th>Database</th>
-                  <td>MongoDB Atlas</td>
-                </tr>
+        </div>
+                {/* Project Details */}
 
-                <tr>
-                  <th>Authentication</th>
-                  <td>JWT (JSON Web Token)</td>
-                </tr>
 
-                <tr>
-                  <th>Deployment</th>
-                  <td>Frontend - Vercel | Backend - Render</td>
-                </tr>
+        <div className="about-grid">
 
-                <tr>
-                  <th>Developer</th>
-                  <td>Abhijeet</td>
-                </tr>
 
-              </tbody>
+          {
+            details.map((item,index)=>(
 
-            </table>
 
-            <div className="alert alert-info mt-4">
+              <div
 
-              <h5>📖 About the Project</h5>
+                className="about-card"
 
-              <p className="mb-0">
-                The Student Registration Portal is a full-stack web
-                application that allows administrators to manage
-                student records while enabling students to securely
-                view and update their own profiles. The project uses
-                React.js for the frontend, Express.js for the backend,
-                MongoDB Atlas as the database, and JWT for secure
-                authentication.
-              </p>
+                key={index}
 
-            </div>
+              >
 
-          </div>
+
+                <div className="about-icon">
+
+                  {item.icon}
+
+                </div>
+
+
+
+                <div>
+
+
+                  <span>
+
+                    {item.title}
+
+                  </span>
+
+
+
+                  <h3>
+
+                    {item.value}
+
+                  </h3>
+
+
+                </div>
+
+
+              </div>
+
+
+            ))
+          }
+
 
         </div>
 
+
+
+
+
+        {/* Description */}
+
+
+        <div className="about-description">
+
+
+          <div className="description-icon">
+
+
+            <FaInfoCircle />
+
+
+          </div>
+
+
+
+          <div>
+
+
+            <h2>
+
+              About The Project
+
+            </h2>
+
+
+
+            <p>
+
+              The Student Registration Portal is a
+              full-stack web application that allows
+              administrators to manage student records
+              while enabling students to securely view
+              and update their own profiles.
+
+
+            </p>
+
+
+            <p>
+
+              The application uses React.js for the
+              frontend, Express.js for the backend,
+              MongoDB Atlas as the database, and JWT
+              authentication for secure user access.
+
+            </p>
+
+
+          </div>
+
+
+        </div>
+
+
+
       </div>
+
+
     </Layout>
+
+
   );
+
+
 }
+
 
 export default About;

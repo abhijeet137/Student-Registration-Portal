@@ -1,0 +1,162 @@
+/* ==========================================
+   Google Font
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ==========================================
+   Root Variables
+========================================== */
+
+:root{
+
+--bg:#0F172A;
+
+--sidebar:#111827;
+
+--navbar:#111827;
+
+--card:#1E293B;
+
+--primary:#3B82F6;
+
+--success:#22C55E;
+
+--warning:#F59E0B;
+
+--danger:#EF4444;
+
+--text:#F8FAFC;
+
+--textLight:#CBD5E1;
+
+--border:#334155;
+
+--shadow:
+0 15px 35px rgba(0,0,0,.25);
+
+--radius:18px;
+
+--transition:.3s ease;
+
+}
+
+/* ==========================================
+   Reset
+========================================== */
+
+*{
+
+margin:0;
+
+padding:0;
+
+box-sizing:border-box;
+
+}
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+body{
+
+font-family:'Poppins',sans-serif;
+
+background:var(--bg);
+
+color:var(--text);
+
+overflow-x:hidden;
+
+}
+
+/* ==========================================
+   Scrollbar
+========================================== */
+
+::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#111827;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:#475569;
+
+border-radius:50px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+background:#64748B;
+
+}
+
+/* ==========================================
+   Links
+========================================== */
+
+a{
+
+text-decoration:none;
+
+color:inherit;
+
+}
+
+/* ==========================================
+   Images
+========================================== */
+
+img{
+
+max-width:100%;
+
+display:block;
+
+}
+
+/* ==========================================
+   Buttons
+========================================== */
+
+button{
+
+font-family:inherit;
+
+cursor:pointer;
+
+transition:var(--transition);
+
+}
+
+/* ==========================================
+   Cards
+========================================== */
+
+.card-modern{
+
+background:var(--card);
+
+border:none;
+
+border-radius:var(--radius);
+
+box-shadow:var(--shadow);
+
+padding:25px;
+
+color:white;
+
+}
