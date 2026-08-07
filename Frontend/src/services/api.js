@@ -1,12 +1,14 @@
 import axios from "axios";
 
 
-
+// ======================================
 // Axios Instance
+// ======================================
 
 const API = axios.create({
 
-  baseURL: "http://localhost:5000/api",
+  baseURL:
+    "https://student-registration-portal-2goy.onrender.com/api",
 
   headers: {
 
@@ -14,12 +16,19 @@ const API = axios.create({
 
   },
 
+  // Required for cookies/JWT sessions
+
+  withCredentials: true,
+
 });
 
 
 
 
-// Add Token Automatically
+
+// ======================================
+// Add JWT Token Automatically
+// ======================================
 
 API.interceptors.request.use(
 
@@ -61,9 +70,14 @@ API.interceptors.request.use(
 
 
 
+
+
+// ======================================
 // Global Error Handling
+// ======================================
 
 API.interceptors.response.use(
+
 
   (response) => {
 
@@ -78,8 +92,11 @@ API.interceptors.response.use(
 
 
     if (
+
       error.response &&
+
       error.response.status === 401
+
     ) {
 
 
@@ -102,7 +119,10 @@ API.interceptors.response.use(
 
   }
 
+
 );
+
+
 
 
 
