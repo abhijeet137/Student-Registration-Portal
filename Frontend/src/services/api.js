@@ -7,18 +7,21 @@ import axios from "axios";
 
 const API = axios.create({
 
-  baseURL:
+    baseURL:
     "https://student-registration-portal-2goy.onrender.com/api",
 
-  headers: {
 
-    "Content-Type": "application/json",
+    headers: {
 
-  },
+        "Content-Type":"application/json",
 
-  // Required for cookies/JWT sessions
+    },
 
-  withCredentials: true,
+
+    // Allow JWT cookies
+
+    withCredentials:true,
+
 
 });
 
@@ -26,46 +29,49 @@ const API = axios.create({
 
 
 
+
 // ======================================
-// Add JWT Token Automatically
+// Add Token Automatically
 // ======================================
 
 API.interceptors.request.use(
 
-  (config) => {
+    (config)=>{
 
 
-    const token =
-      localStorage.getItem("token");
+        const token =
+        localStorage.getItem("token");
 
 
 
-    if (token) {
+        if(token){
 
 
-      config.headers.Authorization =
-        `Bearer ${token}`;
+            config.headers.Authorization =
+            `Bearer ${token}`;
+
+
+        }
+
+
+
+        return config;
+
+
+    },
+
+
+    (error)=>{
+
+
+        return Promise.reject(error);
 
 
     }
 
 
-
-    return config;
-
-
-  },
-
-
-  (error) => {
-
-
-    return Promise.reject(error);
-
-
-  }
-
 );
+
 
 
 
@@ -76,51 +82,48 @@ API.interceptors.request.use(
 // Global Error Handling
 // ======================================
 
+
 API.interceptors.response.use(
 
 
-  (response) => {
+    (response)=>{
 
 
-    return response;
+        return response;
 
 
-  },
+    },
 
 
-  (error) => {
+    (error)=>{
 
 
-    if (
+        if(
 
-      error.response &&
+            error.response &&
 
-      error.response.status === 401
+            error.response.status === 401
 
-    ) {
-
-
-      localStorage.removeItem(
-        "token"
-      );
+        ){
 
 
-      localStorage.removeItem(
-        "user"
-      );
+            localStorage.removeItem("token");
+
+            localStorage.removeItem("user");
+
+
+        }
+
+
+
+        return Promise.reject(error);
 
 
     }
 
 
-
-    return Promise.reject(error);
-
-
-  }
-
-
 );
+
 
 
 

@@ -7,9 +7,14 @@ import API from "../services/api";
 function ProtectedRoute({ children, role }) {
 
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
-  const [authorized, setAuthorized] = useState(false);
+
+  const [authorized, setAuthorized] =
+    useState(false);
+
+
 
 
 
@@ -22,73 +27,125 @@ function ProtectedRoute({ children, role }) {
 
 
 
+
+
+
   const checkUser = async () => {
+
 
     try {
 
 
-      const response = await API.get(
-        "/auth/me"
-      );
+      const response =
+        await API.get("/auth/me");
 
 
 
-      const user = response.data.user;
+      const user =
+        response.data.user;
 
 
 
-      // Save latest user data
+
+      // Save latest user
 
       localStorage.setItem(
+
         "user",
+
         JSON.stringify(user)
+
       );
 
 
 
-      // Check role
 
-      if (
-        role &&
-        user.role !== role
-      ) {
 
-        setAuthorized(false);
 
-      } 
-        
-      else {
+      // ==========================
+      // Role Checking
+      // ==========================
+
+
+      if(role){
+
+
+
+        // Super Admin has admin access
+
+        if(
+
+          role === "admin" &&
+
+          user.role === "superadmin"
+
+        ){
+
+          setAuthorized(true);
+
+        }
+
+
+
+        // Exact role match
+
+        else if(
+
+          user.role === role
+
+        ){
+
+          setAuthorized(true);
+
+        }
+
+
+
+        else{
+
+          setAuthorized(false);
+
+        }
+
+
+
+      }
+
+
+      else{
+
 
         setAuthorized(true);
+
 
       }
 
 
 
-    } 
-    
-    catch (error) {
+
+    }
+
+
+    catch(error){
 
 
       console.log(error);
 
 
-      localStorage.removeItem(
-        "user"
-      );
 
+      localStorage.removeItem("user");
 
-      localStorage.removeItem(
-        "token"
-      );
+      localStorage.removeItem("token");
+
 
 
       setAuthorized(false);
 
 
-    } 
-    
-    finally {
+    }
+
+
+    finally{
 
 
       setLoading(false);
@@ -103,7 +160,10 @@ function ProtectedRoute({ children, role }) {
 
 
 
-  if (loading) {
+
+
+
+  if(loading){
 
 
     return (
@@ -113,17 +173,22 @@ function ProtectedRoute({ children, role }) {
         className="d-flex justify-content-center align-items-center"
 
         style={{
+
           height:"100vh"
+
         }}
 
       >
 
         <h4>
+
           Loading...
+
         </h4>
 
 
       </div>
+
 
     );
 
@@ -134,7 +199,9 @@ function ProtectedRoute({ children, role }) {
 
 
 
-  if (!authorized) {
+
+
+  if(!authorized){
 
 
     return (
@@ -156,10 +223,13 @@ function ProtectedRoute({ children, role }) {
 
 
 
+
+
   return children;
 
 
 }
+
 
 
 export default ProtectedRoute;

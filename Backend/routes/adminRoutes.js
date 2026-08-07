@@ -1,76 +1,226 @@
 const express = require("express");
+
 const router = express.Router();
 
+
 // Middleware
-const protect = require("../middleware/authMiddleware");
-const adminOnly = require("../middleware/adminMiddleware");
+
+const protect =
+require("../middleware/authMiddleware");
+
+const adminOnly =
+require("../middleware/adminMiddleware");
+
+const superAdminOnly =
+require("../middleware/superAdminMiddleware");
+
+
 
 // Controllers
-const {
-  getDashboardStats,
-} = require("../controllers/adminController");
 
 const {
-  getAllStudents,
-  getStudentById,
-  createStudent,
-  updateStudent,
-  deleteStudent,
+
+    getDashboardStats,
+
+} = require("../controllers/adminController");
+
+
+
+const {
+
+    getAllStudents,
+
+    getStudentById,
+
+    createStudent,
+
+    updateStudent,
+
+    deleteStudent,
+
 } = require("../controllers/studentController");
+
+
+
+// Super Admin Controllers
+
+const {
+
+    getAllUsers,
+
+    makeAdmin,
+
+    removeAdmin,
+
+} = require("../controllers/adminController");
+
+
+
+
 
 // ======================================
 // Admin Dashboard
+// Admin + Super Admin
 // ======================================
 
+
 router.get(
-  "/dashboard",
-  protect,
-  adminOnly,
-  getDashboardStats
+
+    "/dashboard",
+
+    protect,
+
+    adminOnly,
+
+    getDashboardStats
+
 );
+
+
+
+
+
+
 
 // ======================================
 // Student Management
+// Admin + Super Admin
 // ======================================
 
-// Get All Students
+
+
 router.get(
-  "/students",
-  protect,
-  adminOnly,
-  getAllStudents
+
+    "/students",
+
+    protect,
+
+    adminOnly,
+
+    getAllStudents
+
 );
 
-// Get Single Student
+
+
 router.get(
-  "/students/:id",
-  protect,
-  adminOnly,
-  getStudentById
+
+    "/students/:id",
+
+    protect,
+
+    adminOnly,
+
+    getStudentById
+
 );
 
-// Create Student
+
+
 router.post(
-  "/students",
-  protect,
-  adminOnly,
-  createStudent
+
+    "/students",
+
+    protect,
+
+    adminOnly,
+
+    createStudent
+
 );
 
-// Update Student
+
+
 router.put(
-  "/students/:id",
-  protect,
-  adminOnly,
-  updateStudent
+
+    "/students/:id",
+
+    protect,
+
+    adminOnly,
+
+    updateStudent
+
 );
 
-// Delete Student
+
+
 router.delete(
-  "/students/:id",
-  protect,
-  adminOnly,
-  deleteStudent
+
+    "/students/:id",
+
+    protect,
+
+    adminOnly,
+
+    deleteStudent
+
 );
+
+
+
+
+
+
+
+
+// ======================================
+// SUPER ADMIN ONLY
+// Admin Management
+// ======================================
+
+
+
+// View all users
+
+router.get(
+
+    "/users",
+
+    protect,
+
+    superAdminOnly,
+
+    getAllUsers
+
+);
+
+
+
+
+// Make Admin
+
+router.put(
+
+    "/make-admin/:id",
+
+    protect,
+
+    superAdminOnly,
+
+    makeAdmin
+
+);
+
+
+
+
+// Remove Admin
+
+router.put(
+
+    "/remove-admin/:id",
+
+    protect,
+
+    superAdminOnly,
+
+    removeAdmin
+
+);
+
+
+
+
 
 module.exports = router;

@@ -6,225 +6,265 @@ const generateRollNumber = require("../utils/generateRollNumber");
 
 
 // ======================================
-// Register User
+// Register User (Student Only)
 // ======================================
 
 const registerUser = async (req, res) => {
 
-  try {
+    try {
 
-
-    let {
-      name,
-      email,
-      password,
-      department,
-      semester,
-      phone,
-      address,
-    } = req.body;
-
-
-
-    name = name.trim();
-
-    email = email.trim().toLowerCase();
-
-    department = department.trim();
-
-    phone = phone ? phone.trim() : "";
-
-    address = address ? address.trim() : "";
+        let {
+            name,
+            email,
+            password,
+            department,
+            semester,
+            phone,
+            address,
+        } = req.body;
 
 
 
+        // ==========================
+        // Trim Data
+        // ==========================
 
-    // Name Validation
+        name = name.trim();
 
-    if (!/^[A-Za-z\s'-]+$/.test(name)) {
+        email = email.trim().toLowerCase();
 
-      return res.status(400).json({
+        department = department.trim();
 
-        success:false,
+        phone = phone ? phone.trim() : "";
 
-        message:
-        "Name can contain only letters, spaces, apostrophes and hyphens."
-
-      });
-
-    }
+        address = address ? address.trim() : "";
 
 
 
 
-    // Phone Validation
+        // ==========================
+        // Name Validation
+        // ==========================
 
-    if (
-      phone &&
-      !/^[6-9]\d{9}$/.test(phone)
-    ) {
+        if (!/^[A-Za-z\s'-]+$/.test(name)) {
 
-      return res.status(400).json({
+            return res.status(400).json({
 
-        success:false,
+                success:false,
 
-        message:
-        "Phone Number must be a valid 10-digit Indian mobile number."
+                message:
+                "Name can contain only letters, spaces, apostrophes and hyphens."
 
-      });
+            });
 
-    }
-
-
-
-
-    // Email Check
-
-    const emailExists =
-      await User.findOne({
-        email
-      });
-
-
-
-    if(emailExists){
-
-      return res.status(400).json({
-
-        success:false,
-
-        message:"Email already exists."
-
-      });
-
-    }
+        }
 
 
 
 
-    // Phone Check
+        // ==========================
+        // Phone Validation
+        // ==========================
 
-    if(phone){
+        if (
+            phone &&
+            !/^[6-9]\d{9}$/.test(phone)
+        ) {
 
-      const phoneExists =
-        await User.findOne({
-          phone
+            return res.status(400).json({
+
+                success:false,
+
+                message:
+                "Phone Number must be a valid 10-digit Indian mobile number."
+
+            });
+
+        }
+
+
+
+
+
+        // ==========================
+        // Email Exists
+        // ==========================
+
+        const emailExists =
+            await User.findOne({
+                email
+            });
+
+
+
+        if(emailExists){
+
+            return res.status(400).json({
+
+                success:false,
+
+                message:
+                "Email already exists."
+
+            });
+
+        }
+
+
+
+
+
+        // ==========================
+        // Phone Exists
+        // ==========================
+
+        if(phone){
+
+            const phoneExists =
+                await User.findOne({
+                    phone
+                });
+
+
+
+            if(phoneExists){
+
+                return res.status(400).json({
+
+                    success:false,
+
+                    message:
+                    "Phone Number already exists."
+
+                });
+
+            }
+
+        }
+
+
+
+
+
+        // ==========================
+        // Generate Roll Number
+        // ==========================
+
+        const rollNumber =
+            await generateRollNumber(
+                department
+            );
+
+
+
+
+
+        // ==========================
+        // Hash Password
+        // ==========================
+
+        const hashedPassword =
+            await bcrypt.hash(
+                password,
+                10
+            );
+
+
+
+
+
+
+        // ==========================
+        // Create Student
+        // ==========================
+
+        const user =
+            await User.create({
+
+                name,
+
+                email,
+
+                password:hashedPassword,
+
+
+                // IMPORTANT
+                // Every registration is student
+
+                role:"student",
+
+
+                rollNumber,
+
+                department,
+
+                semester,
+
+                phone,
+
+                address,
+
+            });
+
+
+
+
+
+
+
+        res.status(201).json({
+
+            success:true,
+
+            message:
+            "User Registered Successfully",
+
+
+            user:{
+
+
+                id:user._id,
+
+                name:user.name,
+
+                email:user.email,
+
+                role:user.role,
+
+                rollNumber:user.rollNumber,
+
+                department:user.department,
+
+                semester:user.semester
+
+
+            }
+
         });
 
 
 
-      if(phoneExists){
+    }
 
-        return res.status(400).json({
+    catch(error){
 
-          success:false,
 
-          message:"Phone Number already exists."
+        console.log(error);
+
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
 
         });
 
-      }
 
     }
-
-
-
-
-    const rollNumber =
-      await generateRollNumber(
-        department
-      );
-
-
-
-    const hashedPassword =
-      await bcrypt.hash(
-        password,
-        10
-      );
-
-
-
-
-    const user =
-      await User.create({
-
-        name,
-
-        email,
-
-        password:hashedPassword,
-
-        role:"student",
-
-        rollNumber,
-
-        department,
-
-        semester,
-
-        phone,
-
-        address,
-
-      });
-
-
-
-
-
-    res.status(201).json({
-
-      success:true,
-
-      message:
-      "User Registered Successfully",
-
-      user:{
-
-        id:user._id,
-
-        name:user.name,
-
-        email:user.email,
-
-        role:user.role,
-
-        rollNumber:user.rollNumber,
-
-        department:user.department,
-
-        semester:user.semester,
-
-      }
-
-    });
-
-
-
-  }
-
-  catch(error){
-
-
-    console.log(error);
-
-
-
-    return res.status(500).json({
-
-      success:false,
-
-      message:error.message
-
-    });
-
-
-  }
 
 };
-
-
 
 
 
@@ -236,216 +276,219 @@ const registerUser = async (req, res) => {
 // Login User
 // ======================================
 
-
-const loginUser = async (req,res)=>{
-
-
-  try{
+const loginUser = async(req,res)=>{
 
 
-    const {
-      email,
-      password
-    } = req.body;
+    try{
 
 
-
-
-    const user =
-      await User.findOne({
-
-        email:
-        email.trim().toLowerCase()
-
-      });
+        const {
+            email,
+            password
+        } = req.body;
 
 
 
 
 
-    if(!user){
+        const user =
+            await User.findOne({
 
-      return res.status(400).json({
+                email:
+                email.trim().toLowerCase()
 
-        success:false,
-
-        message:
-        "Invalid Email or Password"
-
-      });
-
-    }
+            });
 
 
 
 
 
-    const isMatch =
-      await bcrypt.compare(
+        if(!user){
 
-        password,
+            return res.status(400).json({
 
-        user.password
+                success:false,
 
-      );
+                message:
+                "Invalid Email or Password"
 
-
-
-
-
-    if(!isMatch){
-
-
-      return res.status(400).json({
-
-        success:false,
-
-        message:
-        "Invalid Email or Password"
-
-      });
-
-
-    }
-
-
-
-
-
-
-    // Generate Token
-
-
-    const token =
-      jwt.sign(
-
-        {
-
-          id:user._id,
-
-          email:user.email,
-
-          role:user.role,
-
-        },
-
-
-        process.env.JWT_SECRET,
-
-
-        {
-
-          expiresIn:"7d"
+            });
 
         }
 
 
-      );
 
 
 
+        const isMatch =
+            await bcrypt.compare(
 
+                password,
 
+                user.password
 
+            );
 
-    // Cookie for browser sessions
 
 
-    res.cookie(
 
-      "token",
 
-      token,
+        if(!isMatch){
 
-      {
 
-        httpOnly:true,
+            return res.status(400).json({
 
-        secure:false,
+                success:false,
 
-        sameSite:"lax",
+                message:
+                "Invalid Email or Password"
 
-        maxAge:
-        7 * 24 * 60 * 60 * 1000
+            });
 
-      }
 
-    );
+        }
 
 
 
 
 
+        // ==========================
+        // Create JWT
+        // ==========================
 
 
+        const token =
+            jwt.sign(
 
-    // Send Token + User
+                {
 
-    res.status(200).json({
+                    id:user._id,
 
-      success:true,
+                    email:user.email,
 
-      message:
-      "Login Successful",
 
+                    // Supports:
+                    // student
+                    // admin
+                    // superadmin
 
+                    role:user.role,
 
-      token:token,
 
+                },
 
 
-      user:{
+                process.env.JWT_SECRET,
 
 
-        id:user._id,
+                {
 
-        name:user.name,
+                    expiresIn:"7d"
 
-        email:user.email,
+                }
 
-        role:user.role,
 
-        rollNumber:user.rollNumber,
+            );
 
-        department:user.department,
 
-        semester:user.semester,
 
 
-      }
 
 
-    });
 
+        // ==========================
+        // Cookie
+        // ==========================
 
 
+        res.cookie(
 
+            "token",
 
-  }
+            token,
 
-  catch(error){
+            {
 
+                httpOnly:true,
 
-    console.log(error);
+                secure:false,
 
+                sameSite:"lax",
 
+                maxAge:
+                7 * 24 * 60 * 60 * 1000
 
-    res.status(500).json({
+            }
 
-      success:false,
+        );
 
-      message:error.message
 
-    });
 
 
 
-  }
+
+
+        res.status(200).json({
+
+            success:true,
+
+            message:
+            "Login Successful",
+
+
+
+            token,
+
+
+
+            user:{
+
+
+                id:user._id,
+
+                name:user.name,
+
+                email:user.email,
+
+                role:user.role,
+
+                rollNumber:user.rollNumber,
+
+                department:user.department,
+
+                semester:user.semester
+
+
+            }
+
+
+        });
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.log(error);
+
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
 
 
 };
-
-
 
 
 
@@ -457,68 +500,65 @@ const loginUser = async (req,res)=>{
 // Get Current User
 // ======================================
 
-
-const getCurrentUser =
-async(req,res)=>{
+const getCurrentUser = async(req,res)=>{
 
 
-try{
+    try{
 
 
-const user =
-await User.findById(
-
-  req.user.id
-
-)
-.select("-password");
+        const user =
+            await User.findById(
+                req.user.id
+            )
+            .select("-password");
 
 
 
 
 
-if(!user){
+        if(!user){
 
-return res.status(404).json({
+            return res.status(404).json({
 
-success:false,
+                success:false,
 
-message:"User not found"
+                message:
+                "User not found"
 
-});
+            });
 
-}
-
-
-
-
-
-res.status(200).json({
-
-success:true,
-
-user
-
-});
+        }
 
 
 
-}
-
-catch(error){
 
 
-res.status(500).json({
+        res.status(200).json({
 
-success:false,
+            success:true,
 
-message:error.message
+            user
 
-});
+        });
 
 
-}
 
+    }
+
+
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
 
 
 };
@@ -529,42 +569,39 @@ message:error.message
 
 
 
-
 // ======================================
-// Logout
+// Logout User
 // ======================================
 
-
-const logoutUser =
-(req,res)=>{
+const logoutUser = (req,res)=>{
 
 
-res.clearCookie(
+    res.clearCookie(
 
-"token",
+        "token",
 
-{
+        {
 
-httpOnly:true,
+            httpOnly:true,
 
-secure:false,
+            secure:false,
 
-sameSite:"lax"
+            sameSite:"lax"
 
-}
+        }
 
-);
+    );
 
 
 
-res.status(200).json({
+    res.status(200).json({
 
-success:true,
+        success:true,
 
-message:
-"Logged out successfully"
+        message:
+        "Logged out successfully"
 
-});
+    });
 
 
 };
@@ -577,12 +614,14 @@ message:
 
 module.exports = {
 
-registerUser,
 
-loginUser,
+    registerUser,
 
-logoutUser,
+    loginUser,
 
-getCurrentUser,
+    getCurrentUser,
+
+    logoutUser,
+
 
 };

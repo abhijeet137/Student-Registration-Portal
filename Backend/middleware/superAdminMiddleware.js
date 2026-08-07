@@ -1,13 +1,13 @@
 // ======================================
-// Admin Authorization Middleware
+// Super Admin Only Middleware
 // ======================================
 
-const adminOnly = (req, res, next) => {
+const superAdminOnly = (req, res, next) => {
 
     try {
 
 
-        // Check Login
+        // Check if user exists
 
         if (!req.user) {
 
@@ -16,7 +16,7 @@ const adminOnly = (req, res, next) => {
                 success:false,
 
                 message:
-                "Please login first."
+                "Authentication required."
 
             });
 
@@ -26,15 +26,9 @@ const adminOnly = (req, res, next) => {
 
 
 
-        // Allow Admin + Super Admin
+        // Only superadmin allowed
 
-        if (
-
-            req.user.role !== "admin" &&
-
-            req.user.role !== "superadmin"
-
-        ) {
+        if (req.user.role !== "superadmin") {
 
 
             return res.status(403).json({
@@ -42,7 +36,7 @@ const adminOnly = (req, res, next) => {
                 success:false,
 
                 message:
-                "Access Denied. Admin Only."
+                "Access denied. Only Super Admin can perform this action."
 
             });
 
@@ -62,16 +56,12 @@ const adminOnly = (req, res, next) => {
     catch(error){
 
 
-        console.error(error);
-
-
-
         return res.status(500).json({
 
             success:false,
 
             message:
-            "Internal Server Error."
+            error.message
 
         });
 
@@ -82,4 +72,4 @@ const adminOnly = (req, res, next) => {
 
 
 
-module.exports = adminOnly;
+module.exports = superAdminOnly;
