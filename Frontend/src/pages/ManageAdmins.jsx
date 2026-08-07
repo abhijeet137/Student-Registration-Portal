@@ -1,392 +1,185 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import { useEffect, useState } from "react";
 
+import API from "../services/api";
 
-// Components
-import ProtectedRoute from "./components/ProtectedRoute";
 
 
-// Public Pages
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+function ManageAdmins() {
 
 
-// Admin Pages
-import AdminDashboard from "./pages/AdminDashboard";
-import Students from "./pages/Students";
-import AddStudent from "./pages/AddStudent";
-import EditStudent from "./pages/EditStudent";
-import ManageAdmins from "./pages/ManageAdmins";
+const [admins,setAdmins] =
+useState([]);
 
 
-// Student Pages
-import StudentDashboard from "./pages/StudentDashboard";
-import StudentProfile from "./pages/StudentProfile";
-import EditProfile from "./pages/EditProfile";
-import ChangePassword from "./pages/ChangePassword";
-import About from "./pages/About";
+const [loading,setLoading] =
+useState(true);
 
 
-// Error Page
-import NotFound from "./pages/NotFound";
 
 
 
+useEffect(()=>{
 
+fetchAdmins();
 
-function App() {
+},[]);
 
 
-  return (
 
 
-    <BrowserRouter>
 
 
-      <Routes>
+const fetchAdmins = async()=>{
 
 
+try{
 
-        {/* =====================
-            PUBLIC ROUTES
-        ====================== */}
 
+const response =
+await API.get("/admin/admins");
 
 
-        <Route
+setAdmins(
+response.data.admins || []
+);
 
-          path="/"
 
-          element={<Home />}
+}
 
-        />
+catch(error){
 
 
+console.log(error);
 
-        <Route
 
-          path="/login"
+}
 
-          element={<Login />}
+finally{
 
-        />
 
+setLoading(false);
 
 
-        <Route
+}
 
-          path="/register"
 
-          element={<Register />}
+};
 
-        />
 
 
 
 
 
 
+if(loading){
 
-        {/* =====================
-            ADMIN ROUTES
-        ====================== */}
 
+return (
 
+<h2>
+Loading Admins...
+</h2>
 
+);
 
-        <Route
-
-          path="/admin/dashboard"
-
-          element={
-
-            <ProtectedRoute role="admin">
-
-
-              <AdminDashboard />
-
-
-            </ProtectedRoute>
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/admin/students"
-
-          element={
-
-
-            <ProtectedRoute role="admin">
-
-
-              <Students />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/admin/add-student"
-
-          element={
-
-
-            <ProtectedRoute role="admin">
-
-
-              <AddStudent />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/admin/edit-student/:id"
-
-          element={
-
-
-            <ProtectedRoute role="admin">
-
-
-              <EditStudent />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-
-
-        {/* =====================
-            SUPER ADMIN ROUTE
-        ====================== */}
-
-
-
-
-        <Route
-
-          path="/admin/manage-admins"
-
-          element={
-
-
-            <ProtectedRoute role="superadmin">
-
-
-              <ManageAdmins />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-
-
-
-
-        {/* =====================
-            STUDENT ROUTES
-        ====================== */}
-
-
-
-
-        <Route
-
-          path="/student/dashboard"
-
-          element={
-
-
-            <ProtectedRoute role="student">
-
-
-              <StudentDashboard />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/student/profile"
-
-          element={
-
-
-            <ProtectedRoute role="student">
-
-
-              <StudentProfile />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/student/edit-profile"
-
-          element={
-
-
-            <ProtectedRoute role="student">
-
-
-              <EditProfile />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/student/change-password"
-
-          element={
-
-
-            <ProtectedRoute role="student">
-
-
-              <ChangePassword />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-        <Route
-
-          path="/student/about"
-
-          element={
-
-
-            <ProtectedRoute role="student">
-
-
-              <About />
-
-
-            </ProtectedRoute>
-
-
-          }
-
-        />
-
-
-
-
-
-
-
-        {/* =====================
-            404 PAGE
-        ====================== */}
-
-
-
-        <Route
-
-          path="*"
-
-          element={<NotFound />}
-
-
-        />
-
-
-
-
-
-      </Routes>
-
-
-    </BrowserRouter>
-
-
-  );
 
 }
 
 
 
-export default App;
+
+
+
+return (
+
+<div>
+
+
+<h1>
+Manage Admins
+</h1>
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+Name
+</th>
+
+
+<th>
+Email
+</th>
+
+
+<th>
+Role
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+
+<tbody>
+
+
+{
+
+admins.map((admin)=>(
+
+
+<tr key={admin._id}>
+
+
+<td>
+{admin.name}
+</td>
+
+
+<td>
+{admin.email}
+</td>
+
+
+<td>
+{admin.role}
+</td>
+
+
+
+</tr>
+
+
+))
+
+
+}
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+);
+
+
+}
+
+
+
+export default ManageAdmins;

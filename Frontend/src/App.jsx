@@ -17,9 +17,10 @@ import Register from "./pages/Register";
 
 // Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
-import Students from "./pages/Students";   // FIXED HERE
+import Students from "./pages/Students";
 import AddStudent from "./pages/AddStudent";
 import EditStudent from "./pages/EditStudent";
+import ManageAdmins from "./pages/ManageAdmins";
 
 
 // Student Pages
@@ -38,202 +39,280 @@ import NotFound from "./pages/NotFound";
 function App() {
 
 
-  return (
+return (
 
-    <BrowserRouter>
+<BrowserRouter>
 
 
-      <Routes>
+<Routes>
 
 
+{/* ======================
+    PUBLIC ROUTES
+====================== */}
 
-        {/* PUBLIC ROUTES */}
 
+<Route
+path="/"
+element={<Home />}
+/>
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
 
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+<Route
+path="/login"
+element={<Login />}
+/>
 
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
 
+<Route
+path="/register"
+element={<Register />}
+/>
 
 
 
 
-        {/* ADMIN ROUTES */}
 
+{/* ======================
+    ADMIN + SUPERADMIN
+====================== */}
 
-        <Route
-          path="/admin/dashboard"
-          element={
 
-            <ProtectedRoute role="admin">
 
-              <AdminDashboard />
+<Route
 
-            </ProtectedRoute>
+path="/admin/dashboard"
 
-          }
-        />
+element={
 
+<ProtectedRoute role={["admin","superadmin"]}>
 
+<AdminDashboard />
 
-        <Route
-          path="/admin/students"
-          element={
+</ProtectedRoute>
 
-            <ProtectedRoute role="admin">
+}
 
-              <Students />
+/>
 
-            </ProtectedRoute>
 
-          }
-        />
 
 
 
-        <Route
-          path="/admin/add-student"
-          element={
+<Route
 
-            <ProtectedRoute role="admin">
+path="/admin/students"
 
-              <AddStudent />
+element={
 
-            </ProtectedRoute>
+<ProtectedRoute role={["admin","superadmin"]}>
 
-          }
-        />
+<Students />
 
+</ProtectedRoute>
 
+}
 
-        <Route
-          path="/admin/edit-student/:id"
-          element={
+/>
 
-            <ProtectedRoute role="admin">
 
-              <EditStudent />
 
-            </ProtectedRoute>
 
-          }
-        />
 
+<Route
 
+path="/admin/add-student"
 
+element={
 
+<ProtectedRoute role={["admin","superadmin"]}>
 
+<AddStudent />
 
-        {/* STUDENT ROUTES */}
+</ProtectedRoute>
 
+}
 
+/>
 
-        <Route
-          path="/student/dashboard"
-          element={
 
-            <ProtectedRoute role="student">
 
-              <StudentDashboard />
 
-            </ProtectedRoute>
 
-          }
-        />
+<Route
 
+path="/admin/edit-student/:id"
 
+element={
 
-        <Route
-          path="/student/profile"
-          element={
+<ProtectedRoute role={["admin","superadmin"]}>
 
-            <ProtectedRoute role="student">
+<EditStudent />
 
-              <StudentProfile />
+</ProtectedRoute>
 
-            </ProtectedRoute>
+}
 
-          }
-        />
+/>
 
 
 
-        <Route
-          path="/student/edit-profile"
-          element={
 
-            <ProtectedRoute role="student">
 
-              <EditProfile />
 
-            </ProtectedRoute>
+{/* ONLY SUPERADMIN */}
 
-          }
-        />
 
 
+<Route
 
-        <Route
-          path="/student/change-password"
-          element={
+path="/admin/manage-admins"
 
-            <ProtectedRoute role="student">
+element={
 
-              <ChangePassword />
+<ProtectedRoute role={["superadmin"]}>
 
-            </ProtectedRoute>
+<ManageAdmins />
 
-          }
-        />
+</ProtectedRoute>
 
+}
 
+/>
 
-        <Route
-          path="/student/about"
-          element={
 
-            <ProtectedRoute role="student">
 
-              <About />
 
-            </ProtectedRoute>
 
-          }
-        />
 
 
+{/* ======================
+    STUDENT ROUTES
+====================== */}
 
 
 
-        {/* 404 */}
+<Route
 
+path="/student/dashboard"
 
-        <Route
-          path="*"
-          element={<NotFound />}
-        />
+element={
 
+<ProtectedRoute role={["student"]}>
 
+<StudentDashboard />
 
-      </Routes>
+</ProtectedRoute>
 
+}
 
-    </BrowserRouter>
+/>
 
-  );
+
+
+
+
+<Route
+
+path="/student/profile"
+
+element={
+
+<ProtectedRoute role={["student"]}>
+
+<StudentProfile />
+
+</ProtectedRoute>
+
+}
+
+/>
+
+
+
+
+
+<Route
+
+path="/student/edit-profile"
+
+element={
+
+<ProtectedRoute role={["student"]}>
+
+<EditProfile />
+
+</ProtectedRoute>
+
+}
+
+/>
+
+
+
+
+
+<Route
+
+path="/student/change-password"
+
+element={
+
+<ProtectedRoute role={["student"]}>
+
+<ChangePassword />
+
+</ProtectedRoute>
+
+}
+
+/>
+
+
+
+
+
+<Route
+
+path="/student/about"
+
+element={
+
+<ProtectedRoute role={["student"]}>
+
+<About />
+
+</ProtectedRoute>
+
+}
+
+/>
+
+
+
+
+
+
+{/* 404 */}
+
+<Route
+
+path="*"
+
+element={<NotFound />}
+
+/>
+
+
+
+</Routes>
+
+
+</BrowserRouter>
+
+);
 
 }
 
