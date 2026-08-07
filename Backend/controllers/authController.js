@@ -18,6 +18,7 @@ const registerUser = async (req, res) => {
       address,
     } = req.body;
 
+    // Trim Input
     name = name.trim();
     email = email.trim().toLowerCase();
     rollNumber = rollNumber.trim();
@@ -25,17 +26,55 @@ const registerUser = async (req, res) => {
     phone = phone ? phone.trim() : "";
     address = address ? address.trim() : "";
 
-    const existingUser = await User.findOne({ email });
+    // ==========================
+    // Check Email
+    // ==========================
+    const emailExists = await User.findOne({ email });
 
-    if (existingUser) {
+    if (emailExists) {
       return res.status(400).json({
         success: false,
-        message: "Email already exists",
+        message: "Email already exists.",
       });
     }
 
+    // ==========================
+    // Check Roll Number + Department
+    // ==========================
+    const rollExists = await User.findOne({
+      department,
+      rollNumber,
+    });
+
+    if (rollExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Roll Number already exists in this department.",
+      });
+    }
+
+    // ==========================
+    // Check Phone Number
+    // ==========================
+    if (phone) {
+      const phoneExists = await User.findOne({ phone });
+
+      if (phoneExists) {
+        return res.status(400).json({
+          success: false,
+          message: "Phone Number already exists.",
+        });
+      }
+    }
+
+    // ==========================
+    // Hash Password
+    // ==========================
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // ==========================
+    // Create User
+    // ==========================
     const user = await User.create({
       name,
       email,
@@ -58,10 +97,34 @@ const registerUser = async (req, res) => {
         role: user.role,
       },
     });
+
   } catch (error) {
     console.error(error);
 
-    res.status(500).json({
+    // MongoDB Duplicate Key Error
+    if (error.code === 11000) {
+      const fields = Object.keys(error.keyPattern);
+
+      let message = "Duplicate value found.";
+
+      if (fields.includes("email")) {
+        message = "Email already exists.";
+      } else if (fields.includes("phone")) {
+        message = "Phone Number already exists.";
+      } else if (
+        fields.includes("department") &&
+        fields.includes("rollNumber")
+      ) {
+        message = "Roll Number already exists in this department.";
+      }
+
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -86,7 +149,10 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!isMatch) {
       return res.status(400).json({
@@ -124,6 +190,7 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
     });
+
   } catch (error) {
     console.error(error);
 
@@ -135,7 +202,7 @@ const loginUser = async (req, res) => {
 };
 
 // ======================================
-// Current User
+// Get Current User
 // ======================================
 const getCurrentUser = async (req, res) => {
   try {
@@ -152,6 +219,7 @@ const getCurrentUser = async (req, res) => {
       success: true,
       user,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -161,7 +229,7 @@ const getCurrentUser = async (req, res) => {
 };
 
 // ======================================
-// Logout
+// Logout User
 // ======================================
 const logoutUser = (req, res) => {
   res.clearCookie("token", {
