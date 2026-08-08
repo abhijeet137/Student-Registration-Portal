@@ -93,36 +93,32 @@ app.use(limiter);
 
 
 
-
 // ======================================
-// CORS FIX
+// CORS CONFIGURATION
 // ======================================
 
 
 const allowedOrigins = [
 
-
-    // Local
+    // Local Development
 
     "http://localhost:5173",
 
 
 
-    // Current Vercel Frontend
+    // Current Vercel Deployment
+
+    "https://student-registration-portal-gphm.vercel.app",
+
+
+
+    // Previous Deployments
 
     "https://student-registration-portal-jrp2y6avy-abhijeet138.vercel.app",
 
+    "https://student-registration-portal-23lbmxbo8-abhijeet138.vercel.app",
 
-
-    // Old Vercel URL
-
-    "https://student-registration-portal-mmku.vercel.app",
-
-
-
-    // Previous Vercel URL
-
-    "https://student-registration-portal-23lbmxbo8-abhijeet138.vercel.app"
+    "https://student-registration-portal-mmku.vercel.app"
 
 
 ];
@@ -134,10 +130,10 @@ app.use(
 
 cors({
 
-    origin:function(origin,callback){
+    origin:(origin,callback)=>{
 
 
-        // Allow Postman/mobile apps
+        // Allow Postman / Mobile Apps
 
         if(!origin){
 
@@ -157,8 +153,17 @@ cors({
 
 
 
+        console.log(
+            "Blocked CORS Origin:",
+            origin
+        );
+
+
+
         return callback(
-            new Error("Not allowed by CORS")
+            new Error(
+                "Not allowed by CORS"
+            )
         );
 
 
@@ -171,8 +176,6 @@ cors({
 })
 
 );
-
-
 
 
 
@@ -205,9 +208,11 @@ express.urlencoded({
 
 
 
+// ======================================
+// Cookie Parser
+// ======================================
+
 app.use(cookieParser());
-
-
 
 
 
@@ -219,14 +224,14 @@ app.use(cookieParser());
 app.get("/",(req,res)=>{
 
 
-res.send(
-"🎉 Student Registration Portal Backend is Running!"
-);
+    res.send(
+
+        "🎉 Student Registration Portal Backend is Running!"
+
+    );
 
 
 });
-
-
 
 
 
@@ -236,24 +241,32 @@ res.send(
 
 
 app.use(
+
 "/api/auth",
+
 authRoutes
+
 );
 
 
+
 app.use(
+
 "/api/admin",
+
 adminRoutes
+
 );
+
 
 
 app.use(
+
 "/api/student",
+
 studentProfileRoutes
+
 );
-
-
-
 
 
 
@@ -265,20 +278,17 @@ studentProfileRoutes
 app.use((req,res)=>{
 
 
-res.status(404).json({
+    res.status(404).json({
 
-    success:false,
+        success:false,
 
-    message:
-    "Route Not Found"
+        message:
+        "Route Not Found"
+
+    });
+
 
 });
-
-
-});
-
-
-
 
 
 
@@ -292,27 +302,23 @@ app.use(
 (err,req,res,next)=>{
 
 
-console.error(err.stack);
+    console.error(err.message);
 
 
 
-res.status(500).json({
+    res.status(500).json({
 
-    success:false,
+        success:false,
 
-    message:
-    "Internal Server Error"
+        message:
+        "Internal Server Error"
 
-});
+    });
 
 
 }
 
 );
-
-
-
-
 
 
 
@@ -329,11 +335,11 @@ process.env.PORT || 5000;
 app.listen(PORT,()=>{
 
 
-console.log(
+    console.log(
 
-`🚀 Server running on port ${PORT}`
+        `🚀 Server running on port ${PORT}`
 
-);
+    );
 
 
 });
