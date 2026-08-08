@@ -183,3 +183,285 @@ display:none;
 }
 
 }
+/* ==========================
+   NOTIFICATION DROPDOWN
+========================== */
+
+
+.notification-wrapper{
+
+position:relative;
+
+}
+
+
+
+.notification-box{
+
+
+position:absolute;
+
+right:0;
+
+top:55px;
+
+
+width:320px;
+
+
+background:white;
+
+
+border-radius:16px;
+
+
+padding:15px;
+
+
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+
+
+z-index:999;
+
+
+animation:slideDown .3s ease;
+
+
+}
+
+
+
+.notification-box h3{
+
+
+margin:0 0 12px;
+
+
+font-size:18px;
+
+
+color:#111827;
+
+
+}
+
+
+
+
+.notification-item{
+
+
+padding:12px;
+
+
+border-radius:12px;
+
+
+background:#f1f5f9;
+
+
+margin-bottom:10px;
+
+
+cursor:pointer;
+
+
+transition:.3s;
+
+
+}
+
+
+
+.notification-item:hover{
+
+
+background:#e2e8f0;
+
+
+}
+
+
+
+.notification-item strong{
+
+
+display:block;
+
+
+color:#111827;
+
+
+font-size:14px;
+
+
+}
+
+
+
+.notification-item p{
+
+
+margin:5px 0 0;
+
+
+color:#64748b;
+
+
+font-size:13px;
+
+
+}
+
+
+
+
+@keyframes slideDown{
+
+
+from{
+
+opacity:0;
+
+transform:translateY(-10px);
+
+}
+
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+
+}
+
+
+
+
+
+
+/* ==========================
+   DARK MODE
+========================== */
+
+
+
+body.dark-mode{
+
+
+background:#020617;
+
+
+color:white;
+
+
+}
+
+
+
+body.dark-mode .navbar-custom{
+
+
+background:#020617;
+
+
+border-bottom:1px solid #334155;
+
+
+}
+
+
+
+body.dark-mode .navbar-title{
+
+
+color:white;
+
+
+}
+
+
+
+body.dark-mode .navbar-subtitle{
+
+
+color:#94a3b8;
+
+
+}
+
+
+
+body.dark-mode .icon-btn,
+body.dark-mode .menu-btn,
+body.dark-mode .profile-box{
+
+
+background:#1e293b;
+
+
+}
+
+
+
+body.dark-mode .notification-box{
+
+
+background:#0f172a;
+
+
+}
+
+
+
+body.dark-mode .notification-box h3{
+
+
+color:white;
+
+
+}
+
+
+
+body.dark-mode .notification-item{
+
+
+background:#1e293b;
+
+
+}
+
+
+
+body.dark-mode .notification-item strong{
+
+
+color:white;
+
+
+}
+
+
+
+body.dark-mode .notification-item p{
+
+
+color:#cbd5e1;
+
+
+}
+
+
+
+body.dark-mode .notification-item:hover{
+
+
+background:#334155;
+
+
+}

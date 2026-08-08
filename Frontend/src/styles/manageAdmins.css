@@ -1,0 +1,48 @@
+.manage-admins {
+    padding: 30px;
+}
+
+
+.manage-admins h1 {
+    margin-bottom: 25px;
+}
+
+
+.manage-admins table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+
+.manage-admins th,
+.manage-admins td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+
+.manage-admins th {
+    background: #f5f5f5;
+}
+
+
+.manage-admins button {
+
+    padding: 8px 15px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+}
+
+
+.manage-admins button:hover {
+
+    opacity: 0.8;
+
+}

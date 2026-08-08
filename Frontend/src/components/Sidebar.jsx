@@ -29,10 +29,17 @@ function Sidebar({ isOpen, closeSidebar }) {
 
 
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("user")
-    );
+ // const user =
+ //   JSON.parse(
+   //   localStorage.getItem("user")
+   // );
+   const user =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+
+console.log("SIDEBAR USER:", user);
 
 
 

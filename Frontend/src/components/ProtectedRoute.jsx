@@ -4,225 +4,191 @@ import { Navigate } from "react-router-dom";
 import API from "../services/api";
 
 
+function ProtectedRoute({ children, role }) {
 
-function ProtectedRoute({children, role}){
+  const [loading, setLoading] = useState(true);
 
+  const [authorized, setAuthorized] = useState(false);
 
-const [loading,setLoading] =
-useState(true);
 
 
-const [authorized,setAuthorized] =
-useState(false);
+  useEffect(() => {
 
+    checkUser();
 
+  }, []);
 
 
-useEffect(()=>{
 
-checkUser();
 
-},[]);
+  const checkUser = async () => {
 
+    try {
 
 
+      const response = await API.get("/auth/me");
 
 
-const checkUser = async()=>{
+      const user = response.data.user;
 
 
-try{
+      console.log("AUTH USER:", user);
+      console.log("AUTH ROLE:", user.role);
 
 
-const response =
-await API.get("/auth/me");
 
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
 
 
-const user =
-response.data.user;
 
+      // No role restriction
 
+      if (!role) {
 
-localStorage.setItem(
+        setAuthorized(true);
 
-"user",
+        return;
 
-JSON.stringify(user)
+      }
 
-);
 
 
 
+      // Multiple roles
 
+      if (Array.isArray(role)) {
 
-// Role checking
 
-if(role){
+        if (role.includes(user.role)) {
 
+          setAuthorized(true);
 
-if(Array.isArray(role)){
+        }
 
+        else {
 
-if(role.includes(user.role)){
+          setAuthorized(false);
 
+        }
 
-setAuthorized(true);
 
+      }
 
-}
 
-else{
+      // Single role
 
+      else {
 
-setAuthorized(false);
 
+        if (user.role === role) {
 
-}
+          setAuthorized(true);
 
+        }
 
-}
+        else {
 
+          setAuthorized(false);
 
-else{
+        }
 
 
-if(user.role === role){
+      }
 
 
-setAuthorized(true);
 
+    }
 
-}
+    catch(error) {
 
-else{
 
+      console.log(error);
 
-setAuthorized(false);
 
+      localStorage.removeItem("token");
 
-}
+      localStorage.removeItem("user");
 
 
-}
+      setAuthorized(false);
 
 
-}
+    }
 
-else{
 
+    finally {
 
-setAuthorized(true);
 
+      setLoading(false);
 
-}
 
+    }
 
 
+  };
 
 
-}
 
 
-catch(error){
 
+  if(loading){
 
-console.log(error);
 
+    return (
 
+      <div
 
-localStorage.removeItem("token");
+      style={{
 
-localStorage.removeItem("user");
+        height:"100vh",
 
+        display:"flex",
 
-setAuthorized(false);
+        justifyContent:"center",
 
+        alignItems:"center"
 
-}
+      }}
 
+      >
 
+        Loading...
 
-finally{
+      </div>
 
+    );
 
-setLoading(false);
 
+  }
 
-}
 
 
 
-};
 
+  if(!authorized){
 
 
+    return (
 
+      <Navigate
 
+      to="/login"
 
-if(loading){
+      replace
 
+      />
 
-return (
+    );
 
-<div
 
-style={{
+  }
 
-height:"100vh",
 
-display:"flex",
 
-justifyContent:"center",
-
-alignItems:"center"
-
-}}
-
->
-
-
-<h3>
-
-Loading...
-
-</h3>
-
-
-</div>
-
-);
-
-
-}
-
-
-
-
-
-if(!authorized){
-
-
-return (
-
-<Navigate
-
-to="/login"
-
-replace
-
-/>
-
-);
-
-
-}
-
-
-
-
-
-return children;
+  return children;
 
 
 }

@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 
 import API from "../services/api";
 
+import "../styles/manageAdmins.css";
 
 
 function ManageAdmins() {
 
 
-const [admins,setAdmins] =
-useState([]);
+const [users,setUsers] = useState([]);
 
+const [loading,setLoading] = useState(true);
 
-const [loading,setLoading] =
-useState(true);
+const [actionLoading,setActionLoading] = useState(false);
 
 
 
@@ -20,7 +20,7 @@ useState(true);
 
 useEffect(()=>{
 
-fetchAdmins();
+    fetchUsers();
 
 },[]);
 
@@ -29,19 +29,26 @@ fetchAdmins();
 
 
 
-const fetchAdmins = async()=>{
+
+// ==========================
+// Get All Users
+// ==========================
+
+const fetchUsers = async()=>{
 
 
 try{
 
 
-const response =
-await API.get("/admin/admins");
+    const response =
+    await API.get(
+        "/admin/users"
+    );
 
 
-setAdmins(
-response.data.admins || []
-);
+    setUsers(
+        response.data.users || []
+    );
 
 
 }
@@ -49,15 +56,16 @@ response.data.admins || []
 catch(error){
 
 
-console.log(error);
+    console.log(error);
 
 
 }
 
+
 finally{
 
 
-setLoading(false);
+    setLoading(false);
 
 
 }
@@ -71,14 +79,178 @@ setLoading(false);
 
 
 
+
+
+// ==========================
+// Make Admin
+// ==========================
+
+const makeAdmin = async(id)=>{
+
+
+try{
+
+
+    const confirm =
+    window.confirm(
+        "Make this user Admin?"
+    );
+
+
+    if(!confirm)
+    return;
+
+
+
+    setActionLoading(true);
+
+
+
+    await API.put(
+        `/admin/make-admin/${id}`
+    );
+
+
+
+    alert(
+        "User promoted to Admin"
+    );
+
+
+
+    fetchUsers();
+
+
+
+}
+
+catch(error){
+
+
+    console.log(error);
+
+
+    alert(
+
+        error.response?.data?.message ||
+
+        "Failed to make admin"
+
+    );
+
+
+}
+
+finally{
+
+
+    setActionLoading(false);
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+
+// ==========================
+// Remove Admin
+// ==========================
+
+const removeAdmin = async(id)=>{
+
+
+try{
+
+
+    const confirm =
+    window.confirm(
+        "Remove Admin access?"
+    );
+
+
+    if(!confirm)
+    return;
+
+
+
+    setActionLoading(true);
+
+
+
+    await API.put(
+        `/admin/remove-admin/${id}`
+    );
+
+
+
+    alert(
+        "Admin removed"
+    );
+
+
+
+    fetchUsers();
+
+
+
+}
+
+catch(error){
+
+
+    console.log(error);
+
+
+
+    alert(
+
+        error.response?.data?.message ||
+
+        "Failed to remove admin"
+
+    );
+
+
+}
+
+finally{
+
+
+    setActionLoading(false);
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+
 if(loading){
 
 
 return (
 
+<div>
+
 <h2>
-Loading Admins...
+Loading Users...
 </h2>
+
+</div>
 
 );
 
@@ -90,9 +262,10 @@ Loading Admins...
 
 
 
+
 return (
 
-<div>
+<div className="manage-admins">
 
 
 <h1>
@@ -101,10 +274,13 @@ Manage Admins
 
 
 
+
+
 <table>
 
 
 <thead>
+
 
 <tr>
 
@@ -123,9 +299,16 @@ Role
 </th>
 
 
+<th>
+Action
+</th>
+
+
 </tr>
 
+
 </thead>
+
 
 
 
@@ -135,29 +318,127 @@ Role
 
 {
 
-admins.map((admin)=>(
+users.map((user)=>(
 
 
-<tr key={admin._id}>
-
-
-<td>
-{admin.name}
-</td>
+<tr key={user._id}>
 
 
 <td>
-{admin.email}
+
+{user.name}
+
 </td>
+
 
 
 <td>
-{admin.role}
+
+{user.email}
+
 </td>
+
+
+
+<td>
+
+{user.role}
+
+</td>
+
+
+
+
+
+<td>
+
+
+
+
+{
+
+user.role === "student" &&
+
+(
+
+<button
+
+onClick={()=>
+makeAdmin(user._id)
+}
+
+disabled={actionLoading}
+
+>
+
+Make Admin
+
+</button>
+
+
+)
+
+}
+
+
+
+
+
+{
+
+user.role === "admin" &&
+
+(
+
+<button
+
+onClick={()=>
+removeAdmin(user._id)
+}
+
+disabled={actionLoading}
+
+>
+
+Remove Admin
+
+</button>
+
+
+)
+
+}
+
+
+
+
+
+{
+
+user.role === "superadmin" &&
+
+(
+
+<span>
+
+Super Admin
+
+</span>
+
+)
+
+}
+
+
+
+
+</td>
+
 
 
 
 </tr>
+
 
 
 ))
@@ -166,10 +447,13 @@ admins.map((admin)=>(
 }
 
 
+
 </tbody>
 
 
+
 </table>
+
 
 
 
@@ -179,7 +463,6 @@ admins.map((admin)=>(
 
 
 }
-
 
 
 export default ManageAdmins;

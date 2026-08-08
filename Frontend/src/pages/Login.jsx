@@ -22,33 +22,30 @@ function Login() {
   const navigate = useNavigate();
 
 
-  const [loading,setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
 
 
-  const [formData,setFormData] =
-    useState({
+  const [formData, setFormData] = useState({
 
-      email:"",
+    email: "",
 
-      password:"",
+    password: "",
 
-    });
-
+  });
 
 
 
 
-  const handleChange = (e)=>{
+
+  const handleChange = (e) => {
 
 
     setFormData({
 
       ...formData,
 
-      [e.target.name]:
-      e.target.value,
+      [e.target.name]: e.target.value,
 
     });
 
@@ -60,15 +57,14 @@ function Login() {
 
 
 
-
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async (e) => {
 
 
     e.preventDefault();
 
 
 
-    try{
+    try {
 
 
       setLoading(true);
@@ -76,25 +72,19 @@ function Login() {
 
 
 
-      const response =
-        await API.post(
+      const response = await API.post(
 
-          "/auth/login",
+        "/auth/login",
 
-          formData
+        formData
 
-        );
-
+      );
 
 
 
 
 
-
-      // ==========================
-      // Save Token
-      // ==========================
-
+      // Save token
 
       localStorage.setItem(
 
@@ -109,22 +99,30 @@ function Login() {
 
 
 
-
-      // ==========================
-      // Save User
-      // ==========================
-
+      // Save user
 
       localStorage.setItem(
 
         "user",
 
-        JSON.stringify(
-          response.data.user
-        )
+        JSON.stringify(response.data.user)
 
       );
 
+
+
+
+
+
+
+      const role = response.data.user.role;
+
+
+
+      console.log(
+        "LOGIN ROLE FROM API:",
+        role
+      );
 
 
 
@@ -144,23 +142,59 @@ function Login() {
 
 
       // ==========================
-      // Role Based Navigation
+      // ROLE BASED REDIRECT
       // ==========================
 
 
-      const role =
-        response.data.user.role;
+      if (
+
+        role === "superadmin" ||
+
+        role === "admin"
+
+      ) {
+
+
+        console.log(
+          "ADMIN LOGIN"
+        );
+
+
+        navigate(
+          "/admin/dashboard",
+          {
+            replace:true
+          }
+        );
+
+
+      }
 
 
 
 
 
-      if(role === "superadmin"){
+      else if (
+
+        role === "student"
+
+      ) {
+
+
+
+        console.log(
+          "STUDENT LOGIN"
+        );
+
 
 
         navigate(
 
-          "/admin/dashboard"
+          "/student/dashboard",
+
+          {
+            replace:true
+          }
 
         );
 
@@ -169,35 +203,16 @@ function Login() {
 
 
 
-      else if(role === "admin"){
 
 
-        navigate(
+      else {
 
-          "/admin/dashboard"
 
+        console.log(
+          "UNKNOWN ROLE:",
+          role
         );
 
-
-      }
-
-
-
-      else if(role === "student"){
-
-
-        navigate(
-
-          "/student/dashboard"
-
-        );
-
-
-      }
-
-
-
-      else{
 
 
         toast.error(
@@ -207,7 +222,16 @@ function Login() {
         );
 
 
-        navigate("/login");
+
+        localStorage.removeItem(
+          "token"
+        );
+
+
+        localStorage.removeItem(
+          "user"
+        );
+
 
 
       }
@@ -259,7 +283,6 @@ function Login() {
 
 
 
-
   return (
 
 
@@ -267,7 +290,6 @@ function Login() {
 
 
       <div className="auth-card">
-
 
 
 
@@ -312,10 +334,7 @@ function Login() {
 
 
 
-
-
         <form onSubmit={handleSubmit}>
-
 
 
 
@@ -353,17 +372,10 @@ function Login() {
                 placeholder="Enter email"
 
 
-
-                value={
-                  formData.email
-                }
+                value={formData.email}
 
 
-
-                onChange={
-                  handleChange
-                }
-
+                onChange={handleChange}
 
 
                 required
@@ -403,7 +415,6 @@ function Login() {
             <div className="auth-input">
 
 
-
               <FaLock />
 
 
@@ -417,21 +428,13 @@ function Login() {
                 name="password"
 
 
-
                 placeholder="Enter password"
 
 
-
-                value={
-                  formData.password
-                }
+                value={formData.password}
 
 
-
-                onChange={
-                  handleChange
-                }
-
+                onChange={handleChange}
 
 
                 required
@@ -462,7 +465,6 @@ function Login() {
 
 
             className="auth-btn"
-
 
 
             disabled={loading}
@@ -506,10 +508,7 @@ function Login() {
 
 
 
-
-
       </div>
-
 
 
 
@@ -519,7 +518,6 @@ function Login() {
 
 
   );
-
 
 
 }
