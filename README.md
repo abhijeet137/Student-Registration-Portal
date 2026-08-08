@@ -1,16 +1,135 @@
-# React + Vite
+# 🎓 Student Registration Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A Full Stack Web Application for managing student registration, authentication, and administration.
 
-Currently, two official plugins are available:
+This project is developed as a Minor Project using modern web technologies with a complete frontend, backend, and database integration.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+# 🚀 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Frontend (Vercel)
 
-## Expanding the Oxlint configuration
+https://student-registration-portal-gphm.vercel.app
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+
+## Backend API (Render)
+
+https://student-registration-portal-2goy.onrender.com
+
+
+---
+
+# 📂 GitHub Repository
+
+https://github.com/abhijeet137/Student-Registration-Portal
+
+
+---
+
+# 📌 Project Overview
+
+The Student Registration Portal is a full-stack web application that allows students to register, login, and manage their profiles.
+
+The system provides role-based access for:
+
+- Students
+- Admin
+- Super Admin
+
+
+Admins can manage student records, while Super Admins can manage administrator access.
+
+---
+
+# 🛠️ Technologies Used
+
+## Frontend
+
+- React.js
+- Vite
+- JavaScript
+- CSS
+- React Router
+- Axios
+- React Icons
+- Framer Motion
+
+
+## Backend
+
+- Node.js
+- Express.js
+- JWT Authentication
+- REST API
+
+
+## Database
+
+- MongoDB Atlas
+- Mongoose
+
+
+## Deployment
+
+Frontend:
+- Vercel
+
+Backend:
+- Render
+
+
+---
+
+# ✨ Features
+
+## Authentication
+
+✅ User Registration  
+✅ User Login  
+✅ JWT Based Authentication  
+✅ Protected Routes  
+✅ Logout System  
+
+
+## Student Features
+
+✅ Student Registration  
+✅ Student Dashboard  
+✅ Profile Management  
+✅ Change Password  
+
+
+## Admin Features
+
+✅ Admin Dashboard  
+✅ View Students  
+✅ Add Students  
+✅ Edit Students  
+✅ Delete Students  
+
+
+## Super Admin Features
+
+✅ Manage Administrators  
+✅ Promote User to Admin  
+✅ Remove Admin Access  
+
+
+---
+
+# 📸 Screenshots
+
+(Add your project screenshots here)
+
+Examples:
+
+- Login Page
+- Admin Dashboard
+- Student Dashboard
+- Manage Admin Page
+
+
+---
+
+# 📁 Project Structure
