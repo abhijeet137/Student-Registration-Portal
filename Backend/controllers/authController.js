@@ -467,21 +467,19 @@ message:error.message
 const logoutUser = (req,res)=>{
 
 
-res.clearCookie(
-
+res.cookie(
 "token",
-
+token,
 {
+    httpOnly:true,
 
-httpOnly:true,
+    secure:true,
 
-secure:false,
+    sameSite:"none",
 
-sameSite:"lax"
-
+    maxAge:
+    7 * 24 * 60 * 60 * 1000
 }
-
-
 );
 
 

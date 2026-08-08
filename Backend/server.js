@@ -67,25 +67,24 @@ app.use(morgan("dev"));
 
 
 
-
 // ======================================
 // Rate Limiter
 // ======================================
 
 const limiter = rateLimit({
 
-  windowMs: 15 * 60 * 1000,
+    windowMs:15 * 60 * 1000,
 
-  max: 100,
+    max:100,
 
-  message: {
+    message:{
 
-    success:false,
+        success:false,
 
-    message:
-    "Too many requests. Please try again later."
+        message:
+        "Too many requests. Please try again later."
 
-  }
+    }
 
 });
 
@@ -96,41 +95,80 @@ app.use(limiter);
 
 
 // ======================================
-// CORS
+// CORS FIX
 // ======================================
+
+
+const allowedOrigins = [
+
+
+    // Local
+
+    "http://localhost:5173",
+
+
+
+    // Current Vercel Frontend
+
+    "https://student-registration-portal-jrp2y6avy-abhijeet138.vercel.app",
+
+
+
+    // Old Vercel URL
+
+    "https://student-registration-portal-mmku.vercel.app",
+
+
+
+    // Previous Vercel URL
+
+    "https://student-registration-portal-23lbmxbo8-abhijeet138.vercel.app"
+
+
+];
+
+
 
 
 app.use(
 
-  cors({
+cors({
 
-    origin:[
-
-
-      // Local Development
-
-      "http://localhost:5173",
+    origin:function(origin,callback){
 
 
+        // Allow Postman/mobile apps
 
-      // Vercel Production
+        if(!origin){
 
-      "https://student-registration-portal-23lbmxbo8-abhijeet138.vercel.app",
+            return callback(null,true);
+
+        }
 
 
 
-      // Other old Vercel URL (keep)
+        if(
+            allowedOrigins.includes(origin)
+        ){
 
-      "https://student-registration-portal-mmku.vercel.app"
+            return callback(null,true);
+
+        }
 
 
-    ],
+
+        return callback(
+            new Error("Not allowed by CORS")
+        );
+
+
+    },
 
 
     credentials:true,
 
 
-  })
+})
 
 );
 
@@ -145,29 +183,29 @@ app.use(
 
 app.use(
 
-  express.json({
+express.json({
 
     limit:"10mb"
 
-  })
+})
 
 );
 
 
+
 app.use(
 
-  express.urlencoded({
+express.urlencoded({
 
     extended:true
 
-  })
+})
 
 );
 
 
 
 app.use(cookieParser());
-
 
 
 
@@ -181,14 +219,12 @@ app.use(cookieParser());
 app.get("/",(req,res)=>{
 
 
-  res.send(
-    "🎉 Student Registration Portal Backend is Running!"
-  );
+res.send(
+"🎉 Student Registration Portal Backend is Running!"
+);
 
 
 });
-
-
 
 
 
@@ -200,22 +236,21 @@ app.get("/",(req,res)=>{
 
 
 app.use(
-  "/api/auth",
-  authRoutes
+"/api/auth",
+authRoutes
 );
 
 
 app.use(
-  "/api/admin",
-  adminRoutes
+"/api/admin",
+adminRoutes
 );
 
 
 app.use(
-  "/api/student",
-  studentProfileRoutes
+"/api/student",
+studentProfileRoutes
 );
-
 
 
 
@@ -230,17 +265,17 @@ app.use(
 app.use((req,res)=>{
 
 
-  res.status(404).json({
+res.status(404).json({
 
     success:false,
 
-    message:"Route Not Found"
-
-  });
-
+    message:
+    "Route Not Found"
 
 });
 
+
+});
 
 
 
@@ -263,9 +298,10 @@ console.error(err.stack);
 
 res.status(500).json({
 
-success:false,
+    success:false,
 
-message:"Internal Server Error"
+    message:
+    "Internal Server Error"
 
 });
 
@@ -294,7 +330,9 @@ app.listen(PORT,()=>{
 
 
 console.log(
+
 `🚀 Server running on port ${PORT}`
+
 );
 
 
