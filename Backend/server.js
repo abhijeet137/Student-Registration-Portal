@@ -112,13 +112,7 @@ const allowedOrigins = [
 
 
 
-    // Previous Deployments
-
-    "https://student-registration-portal-jrp2y6avy-abhijeet138.vercel.app",
-
-    "https://student-registration-portal-23lbmxbo8-abhijeet138.vercel.app",
-
-    "https://student-registration-portal-mmku.vercel.app"
+   
 
 
 ];
