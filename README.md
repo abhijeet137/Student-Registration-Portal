@@ -118,18 +118,6 @@ Backend:
 
 ---
 
-# 📸 Screenshots
 
-(Add your project screenshots here)
-
-Examples:
-
-- Login Page
-- Admin Dashboard
-- Student Dashboard
-- Manage Admin Page
-
-
----
 
 # 📁 Project Structure
